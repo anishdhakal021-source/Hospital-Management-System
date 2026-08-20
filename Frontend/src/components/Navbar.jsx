@@ -9,7 +9,7 @@ const Navbar = () => {
           {/* Hospital Logo / Name */}
           <div className="flex items-center">
             <div className="text-2xl font-bold text-blue-600">
-              MediCare
+              AasPaj LifeCare Hospital
             </div>
           </div>
 
