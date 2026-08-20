@@ -1,6 +1,6 @@
 import React from "react";
 import Navbar from "./components/Navbar";
-// import Footer from "./components/Footer";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -32,7 +32,7 @@ function App() {
       </main>
 
       {/* Footer */}
-      {/* <Footer /> */}
+      <Footer />
 
     </div>
   );
