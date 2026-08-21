@@ -1,4 +1,6 @@
 import React from "react";
+import logo from "../assets/images/Logo.png"; // Adjust the path as necessary
+
 
 const Navbar = () => {
   return (
@@ -8,8 +10,15 @@ const Navbar = () => {
 
           {/* Hospital Logo / Name */}
           <div className="flex items-center">
+            <img
+              src={logo}
+              alt="AasPaj LifeCare Hospital Logo"
+              className="h-10 w-10 object-contain"
+            />
+
             <div className="text-2xl font-bold text-blue-600">
               AasPaj LifeCare Hospital
+
             </div>
           </div>
 
