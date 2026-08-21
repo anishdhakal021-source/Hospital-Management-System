@@ -11,7 +11,7 @@ const Footer = () => {
           {/* Hospital Information */}
           <div>
             <h2 className="text-2xl font-bold text-white mb-4">
-              AasPaj Life Care Hospital
+              AasPaj Healthcare
             </h2>
 
             <p className="text-gray-400 leading-6">
