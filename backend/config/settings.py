@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "apps.patients",
     "apps.departments",
     "apps.appointments",
+    "apps.doctors",
 ]
 
 REST_FRAMEWORK = {
