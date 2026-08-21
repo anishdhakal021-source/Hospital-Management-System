@@ -11,7 +11,7 @@ const Footer = () => {
           {/* Hospital Information */}
           <div>
             <h2 className="text-2xl font-bold text-white mb-4">
-              MediCare
+              AasPaj Life Care Hospital
             </h2>
 
             <p className="text-gray-400 leading-6">
@@ -86,7 +86,7 @@ const Footer = () => {
         {/* Bottom Section */}
         <div className="border-t border-gray-700 mt-8 pt-6 text-center">
           <p className="text-gray-400">
-            © 2026 MediCare Hospital. All rights reserved.
+            © 2026 info@AasPaj.com. All rights reserved.
           </p>
         </div>
 
