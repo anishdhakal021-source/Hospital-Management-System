@@ -1,6 +1,5 @@
-import React from "react";
-import logo from "../assets/images/hospitalL.png"; // Adjust the path as necessary
-
+import { Link } from "react-router-dom";
+import logo from "../assets/images/hospitalL.png";
 
 const Navbar = () => {
   return (
@@ -10,65 +9,72 @@ const Navbar = () => {
 
           {/* Hospital Logo / Name */}
           <div className="flex items-center">
-            <img
-              src={logo}
-              alt="AasPaj LifeCare Hospital Logo"
-              className="h-53 w-50 object-contain"
-            />
-
-            {/* <div className="text-2xl font-bold text-blue-600">
-              AasPaj HealthCare
-
-            </div> */}
+            <Link to="/">
+              <img
+                src={logo}
+                alt="AasPaj LifeCare Hospital Logo"
+                className="h-53 w-50 object-contain"
+              />
+            </Link>
           </div>
 
           {/* Navigation Links */}
           <div className="hidden md:flex items-center space-x-8">
-            <a
-              href="#"
+
+            <Link
+              to="/"
               className="text-gray-700 hover:text-blue-600 font-medium"
             >
               Home
-            </a>
+            </Link>
 
-            <a
-              href="#"
-              className="text-gray-700 hover:text-blue-600 font-medium"
-            >
-              Departments
-            </a>
-
-            <a
-              href="#"
+            <Link
+              to="/doctors"
               className="text-gray-700 hover:text-blue-600 font-medium"
             >
               Doctors
-            </a>
+            </Link>
 
-            <a
-              href="#"
+            <Link
+              to="/services"
+              className="text-gray-700 hover:text-blue-600 font-medium"
+            >
+              Services
+            </Link>
+
+            <Link
+              to="/departments"
+              className="text-gray-700 hover:text-blue-600 font-medium"
+            >
+              Departments
+            </Link>
+
+            <Link
+              to="/appointments"
               className="text-gray-700 hover:text-blue-600 font-medium"
             >
               Appointments
-            </a>
+            </Link>
 
-            <a
-              href="#"
+            <Link
+              to="/about"
               className="text-gray-700 hover:text-blue-600 font-medium"
             >
               About
-            </a>
+            </Link>
 
-            <a
-              href="#"
+            <Link
+              to="/contact"
               className="text-gray-700 hover:text-blue-600 font-medium"
             >
               Contact
-            </a>
+            </Link>
+
           </div>
 
           {/* Login / Register */}
           <div className="hidden md:flex items-center space-x-3">
+
             <button className="px-4 py-2 text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50">
               Login
             </button>
@@ -76,6 +82,7 @@ const Navbar = () => {
             <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
               Register
             </button>
+
           </div>
 
         </div>
