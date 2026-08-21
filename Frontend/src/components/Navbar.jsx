@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../assets/images/Logo.png"; // Adjust the path as necessary
+import logo from "../assets/images/hospitalL.png"; // Adjust the path as necessary
 
 
 const Navbar = () => {
@@ -13,13 +13,13 @@ const Navbar = () => {
             <img
               src={logo}
               alt="AasPaj LifeCare Hospital Logo"
-              className="h-10 w-10 object-contain"
+              className="h-53 w-50 object-contain"
             />
 
-            <div className="text-2xl font-bold text-blue-600">
-              AasPaj LifeCare Hospital
+            {/* <div className="text-2xl font-bold text-blue-600">
+              AasPaj HealthCare
 
-            </div>
+            </div> */}
           </div>
 
           {/* Navigation Links */}
