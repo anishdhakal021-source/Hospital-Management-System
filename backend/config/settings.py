@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     #local apps
     "apps.users",
     "apps.core",
-    "apps.patients"
+    "apps.patients",
+    "apps.departments"
 ]
 
 REST_FRAMEWORK = {
