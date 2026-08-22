@@ -1,3 +1,63 @@
-from django.shortcuts import render
+from rest_framework import generics
 
-# Create your views here.
+from .models import Appointment
+from .permissions import CanManageAppointments
+from .serializers import AppointmentSerializer
+
+
+class AppointmentListCreateView(generics.ListCreateAPIView):
+    serializer_class = AppointmentSerializer
+    permission_classes = [CanManageAppointments]
+
+    def get_queryset(self):
+        queryset = Appointment.objects.select_related(
+            "patient__user",
+            "doctor__user",
+            "doctor__department",
+        )
+
+        user = self.request.user
+
+        if user.role in {"ADMIN", "RECEPTIONIST"}:
+            return queryset
+
+        if user.role == "PATIENT":
+            return queryset.filter(
+                patient__user=user,
+            )
+
+        if user.role == "DOCTOR":
+            return queryset.filter(
+                doctor__user=user,
+            )
+
+        return queryset.none()
+
+
+class AppointmentDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = AppointmentSerializer
+    permission_classes = [CanManageAppointments]
+
+    def get_queryset(self):
+        queryset = Appointment.objects.select_related(
+            "patient__user",
+            "doctor__user",
+            "doctor__department",
+        )
+
+        user = self.request.user
+
+        if user.role in {"ADMIN", "RECEPTIONIST"}:
+            return queryset
+
+        if user.role == "PATIENT":
+            return queryset.filter(
+                patient__user=user,
+            )
+
+        if user.role == "DOCTOR":
+            return queryset.filter(
+                doctor__user=user,
+            )
+
+        return queryset.none()
