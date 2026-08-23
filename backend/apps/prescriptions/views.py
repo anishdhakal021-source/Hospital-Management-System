@@ -1,9 +1,9 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 
-from .models import Prescription
-from .permissions import CanManagePrescriptions
-from .serializers import PrescriptionSerializer
+from .models import Prescription,PrescriptionItem
+from .permissions import CanManagePrescriptionItem,CanManagePrescriptions
+from .serializers import PrescriptionItemSerializer,PrescriptionSerializer
 
 
 class PrescriptionListCreateView(
@@ -93,3 +93,36 @@ class PrescriptionDetailView(
         return [
             IsAuthenticated(),
         ]
+
+
+# Prescription Item 
+
+class PrescriptionItemListCreateView(generics.ListCreateAPIView):
+    serializer_class = PrescriptionItemSerializer
+    permission_classes = [CanManagePrescriptionItem]
+
+    def get_queryset(self):
+        queryset = PrescriptionItem.objects.select_related(
+            "prescription",
+            "medicine",
+            "prescription__patient",
+            "prescription__doctor",
+        )
+
+        if self.request.user.role == "ADMIN":
+            return queryset
+
+        return queryset.filter(
+            prescription__doctor__user=self.request.user
+        )
+
+
+class PrescriptionItemDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = PrescriptionItem.objects.select_related(
+        "prescription",
+        "medicine",
+        "prescription__patient",
+        "prescription__doctor",
+    ).all()
+    serializer_class = PrescriptionItemSerializer
+    permission_classes = [CanManagePrescriptionItem]
