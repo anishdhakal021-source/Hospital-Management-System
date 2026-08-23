@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "apps.medical_records",
     "apps.prescriptions",
     "apps.medicines",
+    "apps.dispensing",
 ]
 
 REST_FRAMEWORK = {
