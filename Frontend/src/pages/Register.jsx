@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import logo from '../assets/images/hospitalL.png';
 
 const roles = [
@@ -25,21 +24,27 @@ const roles = [
   )},
 ];
 
-function Login() {
-  const [selectedRole, setSelectedRole] = useState('Admin');
+function Register() {
+  const [selectedRole, setSelectedRole] = useState('Patient');
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleLogin = (e) => {
+  const handleRegister = (e) => {
     e.preventDefault();
-    alert(`Authentication Request sent for role: ${selectedRole}`);
+    if (password !== confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+    alert(`Registration Request sent for ${fullName} as ${selectedRole}`);
   };
 
   return (
     <div className="bg-slate-50 flex items-center justify-center min-h-screen p-4">
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-slate-100">
         
-        {/* Logo Section (Top Left - Large) */}
+        {/* Logo Section */}
         <div className="flex justify-start mb-6">
           <img 
             src={logo} 
@@ -51,10 +56,10 @@ function Login() {
         {/* Header */}
         <div className="text-center mb-8">
           <h2 className="text-2xl font-bold text-slate-800 tracking-tight">
-            Portal Sign In
+            Create an Account
           </h2>
           <p className="text-sm text-slate-500 mt-1">
-            Please select your system role to log in
+            Select your role to complete registration
           </p>
         </div>
 
@@ -81,7 +86,21 @@ function Login() {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleRegister} className="space-y-4">
+          <div>
+            <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1">
+              Full Name
+            </label>
+            <input
+              type="text"
+              required
+              placeholder="John Doe"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              className="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm transition"
+            />
+          </div>
+
           <div>
             <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1">
               Email Address
@@ -97,21 +116,32 @@ function Login() {
           </div>
 
           <div>
-            <div className="flex justify-between mb-1">
-              <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider">
-                Password
-              </label>
-              <a href="#" className="text-xs text-indigo-600 hover:underline">
-                Forgot?
-              </a>
-            </div>
+            <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1">
+              Password
+            </label>
             <input
               type="password"
               required
+              autoComplete="new-password"
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm transition"
+              className="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm transition [&::-ms-reveal]:block"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1">
+              Confirm Password
+            </label>
+            <input
+              type="password"
+              required
+              autoComplete="new-password"
+              placeholder="••••••••"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm transition [&::-ms-reveal]:block"
             />
           </div>
 
@@ -119,16 +149,16 @@ function Login() {
             type="submit"
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors shadow-lg shadow-indigo-100 mt-2 text-sm"
           >
-            Sign In as {selectedRole}
+            Register as {selectedRole}
           </button>
         </form>
 
-        {/* Register Link */}
+        {/* Login Link */}
         <div className="text-center mt-6 text-sm">
-          <span className="font-medium text-slate-700">Don't have an account?</span>{' '}
-          <Link to="/register" className="text-red-600 font-bold hover:underline">
-            Register
-          </Link>
+          <span className="font-medium text-slate-700">Already have an account?</span>{' '}
+          <a href="#" className="text-indigo-600 font-bold hover:underline">
+            Sign In
+          </a>
         </div>
 
       </div>
@@ -136,4 +166,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Register;
