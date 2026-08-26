@@ -1,21 +1,37 @@
-import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+
 import Home from "./pages/Home";
+import Doctors from "./pages/Doctors";
+import Services from "./pages/Services";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+
+
 
 function App() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <BrowserRouter>
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
 
-      <Navbar />
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/doctors" element={<Doctors />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+          </Routes>
+        </main>
+        
 
-      <main className="flex-grow">
-        <Home />
-      </main>
-
-      <Footer />
-
-    </div>
+        <Footer />
+        
+      </div>
+    </BrowserRouter>
   );
 }
 
