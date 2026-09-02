@@ -9,6 +9,14 @@ class PatientListView(generics.ListCreateAPIView):
     queryset = Patient.objects.select_related("user")
     serializer_class = PatientSerializer
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        if self.request.user.role == "PATIENT":
+            return queryset.filter(user=self.request.user)
+
+        return queryset
+
     def get_permissions(self):
         if self.request.method == "POST":
             return [CanCreatePatient()]

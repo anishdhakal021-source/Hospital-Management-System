@@ -292,3 +292,58 @@ class DispensingAPITestCase(APITestCase):
             response.status_code,
             status.HTTP_403_FORBIDDEN,
         )
+
+    def test_zero_quantity_is_rejected(self):
+        self.authenticate(self.pharmacist)
+
+        initial_stock = self.batch.quantity
+
+        response = self.client.post(
+            self.url,
+            {
+                "prescription_item": self.prescription_item.id,
+                "medicine_batch": self.batch.id,
+                "quantity": 0,
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+        self.batch.refresh_from_db()
+
+        self.assertEqual(
+            self.batch.quantity,
+            initial_stock,
+        )
+
+
+    def test_negative_quantity_is_rejected(self):
+        self.authenticate(self.pharmacist)
+
+        initial_stock = self.batch.quantity
+
+        response = self.client.post(
+            self.url,
+            {
+                "prescription_item": self.prescription_item.id,
+                "medicine_batch": self.batch.id,
+                "quantity": -5,
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+        self.batch.refresh_from_db()
+
+        self.assertEqual(
+            self.batch.quantity,
+            initial_stock,
+        )

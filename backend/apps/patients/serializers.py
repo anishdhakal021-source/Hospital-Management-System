@@ -48,7 +48,6 @@ class PatientSerializer(serializers.ModelSerializer):
             "blood_group",
             "emergency_contact",
             "created_at",
-            # "updated_at",
         ]
 
         read_only_fields = [
@@ -60,6 +59,14 @@ class PatientSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
+
+    def validate(self, attrs):
+        if self.instance and "user" in attrs:
+            raise serializers.ValidationError(
+                {"user_id": "The patient profile owner cannot be changed."}
+            )
+
+        return attrs
 
     def validate_user_id(self, user):
         if hasattr(user, "patient_profile"):

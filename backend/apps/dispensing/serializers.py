@@ -52,3 +52,12 @@ class DispensingSerializer(serializers.ModelSerializer):
                 )
 
         return attrs
+
+
+    def validate_quantity(self, value):
+        if value <= 0:
+            raise serializers.ValidationError(
+                "Dispensing quantity must be greater than zero."
+            )
+
+        return value

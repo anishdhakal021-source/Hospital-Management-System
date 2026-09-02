@@ -50,7 +50,9 @@ class MedicalRecordSerializer(serializers.ModelSerializer):
 
     def validate_doctor_id(self, doctor):
         """
-        Ensure the doctor profile belongs to a doctor user.
+        Ensure the doctor profile belongs to a doctor user
+        and, when a doctor is making the request, that it is
+        their own doctor profile.
         """
 
         if doctor.user.role != "DOCTOR":
@@ -58,7 +60,19 @@ class MedicalRecordSerializer(serializers.ModelSerializer):
                 "The selected user is not a doctor."
             )
 
+        request = self.context.get("request")
+
+        if (
+            request
+            and request.user.role == "DOCTOR"
+            and doctor.user_id != request.user.id
+        ):
+            raise serializers.ValidationError(
+                "Doctors can only create medical records under their own profile."
+            )
+
         return doctor
+
 
     def validate_diagnosis(self, value):
         value = value.strip()

@@ -135,3 +135,60 @@ class PaymentAPITestCase(TestCase):
             response.status_code,
             status.HTTP_400_BAD_REQUEST,
         )
+
+    def test_updating_payment_updates_invoice_status(self):
+        payment = Payment.objects.create(
+            invoice=self.invoice,
+            amount=Decimal("1500.00"),
+            payment_method="CASH",
+        )
+
+        self.invoice.status = "PAID"
+        self.invoice.save()
+
+        response = self.client.patch(
+            f"/api/payments/{payment.id}/",
+            {
+                "amount": "500.00",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_200_OK,
+        )
+
+        self.invoice.refresh_from_db()
+
+        self.assertEqual(
+            self.invoice.status,
+            "PARTIALLY_PAID",
+        )
+
+
+    def test_deleting_payment_updates_invoice_status(self):
+        payment = Payment.objects.create(
+            invoice=self.invoice,
+            amount=Decimal("500.00"),
+            payment_method="CASH",
+        )
+
+        self.invoice.status = "PARTIALLY_PAID"
+        self.invoice.save()
+
+        response = self.client.delete(
+            f"/api/payments/{payment.id}/",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_204_NO_CONTENT,
+        )
+
+        self.invoice.refresh_from_db()
+
+        self.assertEqual(
+            self.invoice.status,
+            "UNPAID",
+        )

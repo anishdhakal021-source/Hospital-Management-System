@@ -5,7 +5,7 @@ from apps.medical_records.models import MedicalRecord
 from apps.patients.models import Patient
 from apps.medicines.models import Medicine
 
-from .models import Prescription,PrescriptionItem
+from .models import Prescription, PrescriptionItem
 
 
 class PrescriptionSerializer(serializers.ModelSerializer):
@@ -45,53 +45,67 @@ class PrescriptionSerializer(serializers.ModelSerializer):
             "updated_at",
         ]
 
+
     def validate(self, attrs):
-        prescription = attrs.get("prescription")
-        medicine = attrs.get("medicine")
+        medical_record = attrs.get("medical_record")
+        patient = attrs.get("patient")
+        doctor = attrs.get("doctor")
 
         request = self.context.get("request")
 
-        if request and request.user.is_authenticated:
-            if request.user.role == "DOCTOR" and prescription:
-                if prescription.doctor.user != request.user:
-                    raise serializers.ValidationError(
-                        {
-                            "prescription": (
-                                "You can only manage items for "
-                                "your own prescriptions."
-                            )
-                        }
-                    )
+        # During PATCH/PUT, use the existing values when a field
+        # is not included in the request.
+        if self.instance:
+            medical_record = medical_record or self.instance.medical_record
+            patient = patient or self.instance.patient
+            doctor = doctor or self.instance.doctor
 
-        if prescription and medicine:
-            queryset = PrescriptionItem.objects.filter(
-                prescription=prescription,
-                medicine=medicine,
-            )
-
-            if self.instance:
-                queryset = queryset.exclude(
-                    pk=self.instance.pk
-                )
-
-            if queryset.exists():
+        # Medical record, patient, and doctor must refer to the
+        # same clinical relationship.
+        if medical_record and patient:
+            if medical_record.patient_id != patient.id:
                 raise serializers.ValidationError(
                     {
-                        "medicine": (
-                            "This medicine is already included "
-                            "in this prescription."
+                        "patient_id": (
+                            "The selected patient does not belong " "to the medical record."
                         )
                     }
                 )
 
+        if medical_record and doctor:
+            if medical_record.doctor_id != doctor.id:
+                raise serializers.ValidationError(
+                    {
+                        "doctor_id": (
+                            "The selected doctor does not belong " "to the medical record."
+                        )
+                    }
+                )
+
+        # A doctor may only create/manage prescriptions under
+        # their own doctor profile.
+        if (
+            request
+            and request.user.is_authenticated
+            and request.user.role == "DOCTOR"
+            and doctor.user_id != request.user.id
+        ):
+            raise serializers.ValidationError(
+                {
+                    "doctor_id": (
+                        "Doctors can only manage prescriptions " "under their own profile."
+                    )
+                }
+            )
+
         return attrs
 
-    def validate_instructions(self, value):
-        return value.strip()
+        def validate_instructions(self, value):
+            return value.strip()
 
 
+# Prescription Item
 
-# Prescription Item 
 
 class PrescriptionItemSerializer(serializers.ModelSerializer):
     class Meta:
@@ -114,11 +128,35 @@ class PrescriptionItemSerializer(serializers.ModelSerializer):
             "updated_at",
         ]
 
+    def validate(self, attrs):
+        prescription = attrs.get("prescription")
+        request = self.context.get("request")
+
+        if self.instance:
+            prescription = (
+                prescription or self.instance.prescription
+            )
+
+        if (
+            request
+            and request.user.is_authenticated
+            and request.user.role == "DOCTOR"
+            and prescription.doctor.user_id != request.user.id
+        ):
+            raise serializers.ValidationError(
+                {
+                    "prescription": (
+                        "Doctors can only manage items "
+                        "for their own prescriptions."
+                    )
+                }
+            )
+
+        return attrs
+
     def validate_quantity(self, value):
         if value <= 0:
-            raise serializers.ValidationError(
-                "Quantity must be greater than zero."
-            )
+            raise serializers.ValidationError("Quantity must be greater than zero.")
 
         return value
 
@@ -126,9 +164,7 @@ class PrescriptionItemSerializer(serializers.ModelSerializer):
         value = value.strip()
 
         if not value:
-            raise serializers.ValidationError(
-                "Dosage cannot be empty."
-            )
+            raise serializers.ValidationError("Dosage cannot be empty.")
 
         return value
 
@@ -136,9 +172,7 @@ class PrescriptionItemSerializer(serializers.ModelSerializer):
         value = value.strip()
 
         if not value:
-            raise serializers.ValidationError(
-                "Frequency cannot be empty."
-            )
+            raise serializers.ValidationError("Frequency cannot be empty.")
 
         return value
 
@@ -146,36 +180,7 @@ class PrescriptionItemSerializer(serializers.ModelSerializer):
         value = value.strip()
 
         if not value:
-            raise serializers.ValidationError(
-                "Duration cannot be empty."
-            )
+            raise serializers.ValidationError("Duration cannot be empty.")
 
         return value
 
-    def validate(self, attrs):
-        prescription = attrs.get("prescription")
-        medicine = attrs.get("medicine")
-
-        if prescription and medicine:
-            queryset = PrescriptionItem.objects.filter(
-                prescription=prescription,
-                medicine=medicine,
-            )
-
-            # Exclude the current item when updating an existing item.
-            if self.instance:
-                queryset = queryset.exclude(
-                    pk=self.instance.pk
-                )
-
-            if queryset.exists():
-                raise serializers.ValidationError(
-                    {
-                        "medicine": (
-                            "This medicine is already "
-                            "included in this prescription."
-                        )
-                    }
-                )
-
-        return attrs

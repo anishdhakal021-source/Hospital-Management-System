@@ -127,6 +127,82 @@ class MedicalRecordAPITestCase(APITestCase):
             status.HTTP_201_CREATED,
         )
 
+    def test_doctor_cannot_create_record_for_another_doctor(self):
+        self.authenticate(self.doctor_user)
+
+        response = self.client.post(
+            self.list_url,
+            {
+                "patient_id": self.patient.id,
+                "doctor_id": self.doctor2.id,
+                "diagnosis": "Unauthorized record",
+                "symptoms": "Fever",
+                "notes": "Should not be created.",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+        self.assertFalse(
+            MedicalRecord.objects.filter(
+                patient=self.patient,
+                doctor=self.doctor2,
+                diagnosis="Unauthorized record",
+            ).exists()
+        )
+
+    def test_doctor_cannot_reassign_record_to_another_doctor(self):
+        self.authenticate(self.doctor_user)
+
+        url = reverse(
+            "medical-record-detail",
+            kwargs={"pk": self.record.id},
+        )
+
+        response = self.client.patch(
+            url,
+            {
+                "doctor_id": self.doctor2.id,
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+        self.record.refresh_from_db()
+
+        self.assertEqual(
+            self.record.doctor_id,
+            self.doctor.id,
+        )
+
+    def test_admin_can_create_record_for_any_doctor(self):
+        self.authenticate(self.admin_user)
+
+        response = self.client.post(
+            self.list_url,
+            {
+                "patient_id": self.patient.id,
+                "doctor_id": self.doctor2.id,
+                "diagnosis": "Admin-created record",
+                "symptoms": "Headache",
+                "notes": "Created by admin.",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_201_CREATED,
+        )
+
     def test_patient_cannot_create_medical_record(self):
         self.authenticate(self.patient_user)
 
