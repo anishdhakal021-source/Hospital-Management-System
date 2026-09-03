@@ -1,3 +1,4 @@
+from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 
 from apps.users.models import User
@@ -74,3 +75,65 @@ class PatientSerializer(serializers.ModelSerializer):
             )
 
         return user
+
+
+
+# patient Register
+class PatientRegistrationSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=150)
+    password = serializers.CharField(
+        write_only=True,
+        min_length=8,
+    )
+    email = serializers.EmailField(required=False, allow_blank=True)
+    first_name = serializers.CharField(
+        max_length=150,
+        required=False,
+        allow_blank=True,
+    )
+    last_name = serializers.CharField(
+        max_length=150,
+        required=False,
+        allow_blank=True,
+    )
+
+    date_of_birth = serializers.DateField(
+        required=False,
+        allow_null=True,
+    )
+    gender = serializers.CharField(
+        max_length=20,
+        required=False,
+        allow_blank=True,
+    )
+    phone = serializers.CharField(
+        max_length=20,
+        required=False,
+        allow_blank=True,
+    )
+    address = serializers.CharField(
+        required=False,
+        allow_blank=True,
+    )
+    blood_group = serializers.CharField(
+        max_length=5,
+        required=False,
+        allow_blank=True,
+    )
+    emergency_contact = serializers.CharField(
+        max_length=20,
+        required=False,
+        allow_blank=True,
+    )
+
+    def validate_username(self, value):
+        if User.objects.filter(username=value).exists():
+            raise serializers.ValidationError(
+                "A user with this username already exists."
+            )
+
+        return value
+
+    def validate_password(self, value):
+        validate_password(value)
+        return value
