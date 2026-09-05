@@ -1,9 +1,18 @@
 from rest_framework.permissions import BasePermission
 
 
+class CanReadDepartments(BasePermission):
+    """
+    Any authenticated HMS user can view departments.
+    """
+
+    def has_permission(self, request, view):
+        return request.user.is_authenticated
+
+
 class IsDepartmentManager(BasePermission):
     """
-    Allows Admin and Receptionist users to manage departments.
+    Admin and Receptionist can create, update, and delete departments.
     """
 
     allowed_roles = {

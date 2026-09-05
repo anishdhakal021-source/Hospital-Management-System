@@ -51,13 +51,19 @@ class AppointmentDetailView(generics.RetrieveUpdateDestroyAPIView):
             return queryset
 
         if user.role == "PATIENT":
-            return queryset.filter(
-                patient__user=user,
-            )
+            return queryset.filter(patient__user=user)
 
         if user.role == "DOCTOR":
-            return queryset.filter(
-                doctor__user=user,
-            )
+            return queryset.filter(doctor__user=user)
 
         return queryset.none()
+
+    def perform_destroy(self, instance):
+        if self.request.user.role not in {"ADMIN", "RECEPTIONIST"}:
+            from rest_framework.exceptions import PermissionDenied
+
+            raise PermissionDenied(
+                "Only administrators and receptionists can delete appointments."
+            )
+
+        instance.delete()

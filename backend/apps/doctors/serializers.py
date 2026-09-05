@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from apps.departments.models import Department
 from apps.users.models import User
+from apps.users.serializers import UserAccountSerializer
 
 from .models import Doctor
 
@@ -82,3 +83,33 @@ class DoctorSerializer(serializers.ModelSerializer):
             )
 
         return user
+
+
+class DoctorRegistrationSerializer(UserAccountSerializer):
+    department_id = serializers.PrimaryKeyRelatedField(
+        source="department",
+        queryset=Department.objects.filter(is_active=True),
+    )
+
+    specialization = serializers.CharField(max_length=150)
+
+    license_number = serializers.CharField(max_length=100)
+
+    phone = serializers.CharField(max_length=20)
+
+    consultation_fee = serializers.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+    )
+
+    is_available = serializers.BooleanField(default=True)
+
+    def validate_license_number(self, value):
+        if Doctor.objects.filter(
+            license_number=value
+        ).exists():
+            raise serializers.ValidationError(
+                "A doctor with this license number already exists."
+            )
+
+        return value

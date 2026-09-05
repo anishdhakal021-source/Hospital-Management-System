@@ -38,3 +38,37 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
         return user
+
+
+class UserAccountSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=150)
+    password = serializers.CharField(
+        write_only=True,
+        min_length=8,
+    )
+    email = serializers.EmailField(
+        required=False,
+        allow_blank=True,
+    )
+    first_name = serializers.CharField(
+        max_length=150,
+        required=False,
+        allow_blank=True,
+    )
+    last_name = serializers.CharField(
+        max_length=150,
+        required=False,
+        allow_blank=True,
+    )
+
+    def validate_username(self, value):
+        if User.objects.filter(username=value).exists():
+            raise serializers.ValidationError(
+                "A user with this username already exists."
+            )
+
+        return value
+
+    def validate_password(self, value):
+        validate_password(value)
+        return value

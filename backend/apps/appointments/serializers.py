@@ -98,13 +98,17 @@ class AppointmentSerializer(serializers.ModelSerializer):
 
         # Future appointment validation
         if appointment_date <= timezone.now():
-            raise serializers.ValidationError(
-                {
-                    "appointment_date": (
-                        "Appointment must be scheduled for a future date and time."
-                    )
-                }
-            )
+            if (
+                not self.instance
+                or appointment_date != self.instance.appointment_date
+            ):
+                raise serializers.ValidationError(
+                    {
+                        "appointment_date": (
+                            "Appointment must be scheduled for a future date and time."
+                        )
+                    }
+                )
 
         # Doctor availability
         if not doctor.is_available:

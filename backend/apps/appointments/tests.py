@@ -78,6 +78,12 @@ class AppointmentAPITestCase(APITestCase):
             is_available=True,
         )
 
+        self.receptionist = User.objects.create_user(
+            username="testreceptionist",
+            password="TestReceptionist123",
+            role=User.Role.RECEPTIONIST,
+        )
+
         self.url = reverse("appointment-list-create")
 
     def authenticate(self, user):
@@ -340,4 +346,304 @@ class AppointmentAPITestCase(APITestCase):
         self.assertEqual(
             response.status_code,
             status.HTTP_404_NOT_FOUND,
+        )
+
+    def test_doctor_cannot_be_double_booked(self):
+        appointment_time = self.future_time()
+
+        Appointment.objects.create(
+            patient=self.patient,
+            doctor=self.doctor,
+            appointment_date=appointment_time,
+        )
+
+        self.authenticate(self.patient_user)
+
+        response = self.client.post(
+            self.url,
+            {
+                "patient_id": self.patient.id,
+                "doctor_id": self.doctor.id,
+                "appointment_date": appointment_time.isoformat(),
+                "reason": "Second appointment",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+    def test_doctor_cannot_access_other_doctors_appointment(self):
+        appointment = Appointment.objects.create(
+            patient=self.patient,
+            doctor=self.other_doctor,
+            appointment_date=self.future_time(),
+        )
+
+        self.authenticate(self.doctor_user)
+
+        response = self.client.patch(
+            reverse(
+                "appointment-detail",
+                kwargs={"pk": appointment.id},
+            ),
+            {
+                "status": Appointment.Status.COMPLETED,
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_404_NOT_FOUND,
+        )
+
+        appointment.refresh_from_db()
+
+        self.assertEqual(
+            appointment.status,
+            Appointment.Status.SCHEDULED,
+        )
+
+    def test_patient_cannot_delete_own_appointment(self):
+        appointment = Appointment.objects.create(
+            patient=self.patient,
+            doctor=self.doctor,
+            appointment_date=self.future_time(),
+        )
+
+        self.authenticate(self.patient_user)
+
+        response = self.client.delete(
+            reverse(
+                "appointment-detail",
+                kwargs={"pk": appointment.id},
+            )
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_403_FORBIDDEN,
+        )
+
+        self.assertTrue(
+            Appointment.objects.filter(id=appointment.id).exists()
+        )
+
+    def test_admin_can_delete_appointment(self):
+        appointment = Appointment.objects.create(
+            patient=self.patient,
+            doctor=self.doctor,
+            appointment_date=self.future_time(),
+        )
+
+        self.authenticate(self.admin)
+
+        response = self.client.delete(
+            reverse(
+                "appointment-detail",
+                kwargs={"pk": appointment.id},
+            )
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_204_NO_CONTENT,
+        )
+
+        self.assertFalse(
+            Appointment.objects.filter(id=appointment.id).exists()
+        )
+
+    def test_receptionist_can_delete_appointment(self):
+        appointment = Appointment.objects.create(
+            patient=self.patient,
+            doctor=self.doctor,
+            appointment_date=self.future_time(),
+        )
+
+        self.authenticate(self.receptionist)
+
+        response = self.client.delete(
+            reverse(
+                "appointment-detail",
+                kwargs={"pk": appointment.id},
+            )
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_204_NO_CONTENT,
+        )
+
+        self.assertFalse(
+            Appointment.objects.filter(id=appointment.id).exists()
+        )
+
+    def test_doctor_cannot_cancel_appointment(self):
+        appointment = Appointment.objects.create(
+            patient=self.patient,
+            doctor=self.doctor,
+            appointment_date=self.future_time(),
+        )
+
+        self.authenticate(self.doctor_user)
+
+        response = self.client.patch(
+            reverse(
+                "appointment-detail",
+                kwargs={"pk": appointment.id},
+            ),
+            {
+                "status": Appointment.Status.CANCELLED,
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+        appointment.refresh_from_db()
+
+        self.assertEqual(
+            appointment.status,
+            Appointment.Status.SCHEDULED,
+        )
+
+    def test_doctor_can_mark_appointment_no_show(self):
+        appointment = Appointment.objects.create(
+            patient=self.patient,
+            doctor=self.doctor,
+            appointment_date=self.future_time(),
+        )
+
+        self.authenticate(self.doctor_user)
+
+        response = self.client.patch(
+            reverse(
+                "appointment-detail",
+                kwargs={"pk": appointment.id},
+            ),
+            {
+                "status": Appointment.Status.NO_SHOW,
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_200_OK,
+        )
+
+        appointment.refresh_from_db()
+
+        self.assertEqual(
+            appointment.status,
+            Appointment.Status.NO_SHOW,
+        )
+
+    def test_doctor_can_complete_past_scheduled_appointment(self):
+        appointment = Appointment.objects.create(
+            patient=self.patient,
+            doctor=self.doctor,
+            appointment_date=timezone.now() - timedelta(minutes=30),
+            status=Appointment.Status.SCHEDULED,
+        )
+
+        self.authenticate(self.doctor_user)
+
+        response = self.client.patch(
+            reverse(
+                "appointment-detail",
+                kwargs={"pk": appointment.id},
+            ),
+            {
+                "status": Appointment.Status.COMPLETED,
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_200_OK,
+        )
+
+        appointment.refresh_from_db()
+
+        self.assertEqual(
+            appointment.status,
+            Appointment.Status.COMPLETED,
+        )
+
+    def test_doctor_can_mark_past_scheduled_appointment_no_show(self):
+        appointment = Appointment.objects.create(
+            patient=self.patient,
+            doctor=self.doctor,
+            appointment_date=timezone.now() - timedelta(minutes=30),
+            status=Appointment.Status.SCHEDULED,
+        )
+
+        self.authenticate(self.doctor_user)
+
+        response = self.client.patch(
+            reverse(
+                "appointment-detail",
+                kwargs={"pk": appointment.id},
+            ),
+            {
+                "status": Appointment.Status.NO_SHOW,
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_200_OK,
+        )
+
+        appointment.refresh_from_db()
+
+        self.assertEqual(
+            appointment.status,
+            Appointment.Status.NO_SHOW,
+        )
+
+    def test_cancelled_appointment_does_not_block_doctor_time_slot(self):
+        appointment_time = self.future_time()
+
+        Appointment.objects.create(
+            patient=self.patient,
+            doctor=self.doctor,
+            appointment_date=appointment_time,
+            status=Appointment.Status.CANCELLED,
+        )
+
+        self.authenticate(self.other_patient_user)
+
+        response = self.client.post(
+            self.url,
+            {
+                "patient_id": self.other_patient.id,
+                "doctor_id": self.doctor.id,
+                "appointment_date": appointment_time.isoformat(),
+                "reason": "New appointment after cancellation",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_201_CREATED,
+        )
+
+        self.assertEqual(
+            Appointment.objects.filter(
+                doctor=self.doctor,
+                appointment_date=appointment_time,
+            ).count(),
+            2,
         )
