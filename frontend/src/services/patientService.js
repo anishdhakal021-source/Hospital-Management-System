@@ -27,3 +27,14 @@ export const getUsers = async () => {
   const response = await apiClient.get("/users/");
   return response.data;
 };
+
+
+// Patient Registration Service
+export const registerPatient = async (patientData) => {
+  const response = await apiClient.post(
+    "/patients/register/",
+    patientData
+  );
+
+  return response.data;
+};
