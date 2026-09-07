@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from apps.users.models import User
+from apps.users.serializers import UserAccountSerializer
 
 from .models import Patient
 
@@ -48,7 +49,6 @@ class PatientSerializer(serializers.ModelSerializer):
             "blood_group",
             "emergency_contact",
             "created_at",
-            # "updated_at",
         ]
 
         read_only_fields = [
@@ -58,8 +58,15 @@ class PatientSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "created_at",
-            "updated_at",
         ]
+
+    def validate(self, attrs):
+        if self.instance and "user" in attrs:
+            raise serializers.ValidationError(
+                {"user_id": "The patient profile owner cannot be changed."}
+            )
+
+        return attrs
 
     def validate_user_id(self, user):
         if hasattr(user, "patient_profile"):
@@ -68,3 +75,36 @@ class PatientSerializer(serializers.ModelSerializer):
             )
 
         return user
+
+
+
+# patient Register
+class PatientRegistrationSerializer(UserAccountSerializer):
+    date_of_birth = serializers.DateField(
+        required=False,
+        allow_null=True,
+    )
+    gender = serializers.CharField(
+        max_length=20,
+        required=False,
+        allow_blank=True,
+    )
+    phone = serializers.CharField(
+        max_length=20,
+        required=False,
+        allow_blank=True,
+    )
+    address = serializers.CharField(
+        required=False,
+        allow_blank=True,
+    )
+    blood_group = serializers.CharField(
+        max_length=5,
+        required=False,
+        allow_blank=True,
+    )
+    emergency_contact = serializers.CharField(
+        max_length=20,
+        required=False,
+        allow_blank=True,
+    )
