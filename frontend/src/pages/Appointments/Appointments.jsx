@@ -1,16 +1,23 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import {
   CalendarDays,
+  Check,
   Plus,
   RefreshCw,
+  UserX,
+  X,
 } from "lucide-react";
 
-import { getAppointments } from "../../services/appointmentService";
+import {
+  getAppointments,
+  updateAppointment,
+} from "../../services/appointmentService";
 import { useAuth } from "../../context/AuthContext";
 
 const Appointments = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { user } = useAuth();
 
   const canCreateAppointment =
@@ -29,6 +36,17 @@ const Appointments = () => {
   } = useQuery({
     queryKey: ["appointments"],
     queryFn: getAppointments,
+  });
+
+  const statusMutation = useMutation({
+    mutationFn: ({ appointmentId, status }) =>
+      updateAppointment(appointmentId, { status }),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["appointments"],
+      });
+    },
   });
 
   const getStatusClasses = (status) => {
@@ -62,6 +80,97 @@ const Appointments = () => {
     }
 
     return new Date(date).toLocaleString();
+  };
+
+  const canChangeStatus = (appointment) => {
+    if (appointment.status !== "SCHEDULED") {
+      return false;
+    }
+
+    return (
+      user?.role === "ADMIN" ||
+      user?.role === "RECEPTIONIST" ||
+      user?.role === "DOCTOR" ||
+      user?.role === "PATIENT"
+    );
+  };
+
+  const getAvailableActions = (appointment) => {
+    if (!canChangeStatus(appointment)) {
+      return [];
+    }
+
+    if (user?.role === "PATIENT") {
+      return [
+        {
+          status: "CANCELLED",
+          label: "Cancel",
+          icon: X,
+          className:
+            "border-red-200 text-red-600 hover:bg-red-50",
+        },
+      ];
+    }
+
+    if (user?.role === "DOCTOR") {
+      return [
+        {
+          status: "COMPLETED",
+          label: "Complete",
+          icon: Check,
+          className:
+            "border-green-200 text-green-600 hover:bg-green-50",
+        },
+        {
+          status: "NO_SHOW",
+          label: "No Show",
+          icon: UserX,
+          className:
+            "border-yellow-200 text-yellow-600 hover:bg-yellow-50",
+        },
+      ];
+    }
+
+    return [
+      {
+        status: "COMPLETED",
+        label: "Complete",
+        icon: Check,
+        className:
+          "border-green-200 text-green-600 hover:bg-green-50",
+      },
+      {
+        status: "NO_SHOW",
+        label: "No Show",
+        icon: UserX,
+        className:
+          "border-yellow-200 text-yellow-600 hover:bg-yellow-50",
+      },
+      {
+        status: "CANCELLED",
+        label: "Cancel",
+        icon: X,
+        className:
+          "border-red-200 text-red-600 hover:bg-red-50",
+      },
+    ];
+  };
+
+  const handleStatusChange = (appointment, status) => {
+    const action = formatStatus(status);
+
+    const confirmed = window.confirm(
+      `Are you sure you want to mark this appointment as ${action}?`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    statusMutation.mutate({
+      appointmentId: appointment.id,
+      status,
+    });
   };
 
   if (isLoading) {
@@ -145,6 +254,14 @@ const Appointments = () => {
         </div>
       </div>
 
+      {/* Mutation error */}
+      {statusMutation.isError && (
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          {statusMutation.error?.response?.data?.detail ||
+            "Unable to update the appointment status."}
+        </div>
+      )}
+
       {/* Empty state */}
       {appointments.length === 0 ? (
         <div className="rounded-xl border border-gray-200 bg-white p-10 text-center">
@@ -189,48 +306,100 @@ const Appointments = () => {
                     <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                       Reason
                     </th>
+
+                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
 
                 <tbody className="divide-y divide-gray-200">
-                  {appointments.map((appointment) => (
-                    <tr
-                      key={appointment.id}
-                      className="hover:bg-gray-50"
-                    >
-                      <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                        {appointment.patient_name || "—"}
-                      </td>
+                  {appointments.map((appointment) => {
+                    const actions = getAvailableActions(appointment);
 
-                      <td className="px-6 py-4 text-sm text-gray-700">
-                        {appointment.doctor_name || "—"}
-                      </td>
+                    return (
+                      <tr
+                        key={appointment.id}
+                        className="hover:bg-gray-50"
+                      >
+                        <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                          {appointment.patient_name || "—"}
+                        </td>
 
-                      <td className="px-6 py-4 text-sm text-gray-700">
-                        {appointment.department_name || "—"}
-                      </td>
+                        <td className="px-6 py-4 text-sm text-gray-700">
+                          {appointment.doctor_name || "—"}
+                        </td>
 
-                      <td className="px-6 py-4 text-sm text-gray-700">
-                        {formatDate(
-                          appointment.appointment_date
-                        )}
-                      </td>
+                        <td className="px-6 py-4 text-sm text-gray-700">
+                          {appointment.department_name || "—"}
+                        </td>
 
-                      <td className="px-6 py-4">
-                        <span
-                          className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${getStatusClasses(
-                            appointment.status
-                          )}`}
-                        >
-                          {formatStatus(appointment.status)}
-                        </span>
-                      </td>
+                        <td className="px-6 py-4 text-sm text-gray-700">
+                          {formatDate(
+                            appointment.appointment_date
+                          )}
+                        </td>
 
-                      <td className="px-6 py-4 text-sm text-gray-700">
-                        {appointment.reason || "—"}
-                      </td>
-                    </tr>
-                  ))}
+                        <td className="px-6 py-4">
+                          <span
+                            className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${getStatusClasses(
+                              appointment.status
+                            )}`}
+                          >
+                            {formatStatus(appointment.status)}
+                          </span>
+                        </td>
+
+                        <td className="px-6 py-4 text-sm text-gray-700">
+                          {appointment.reason || "—"}
+                        </td>
+
+                        <td className="px-6 py-4">
+                          {actions.length > 0 ? (
+                            <div className="flex flex-wrap gap-2">
+                              {actions.map((action) => {
+                                const Icon = action.icon;
+                                const isUpdating =
+                                  statusMutation.isPending &&
+                                  statusMutation.variables
+                                    ?.appointmentId ===
+                                    appointment.id;
+
+                                return (
+                                  <button
+                                    key={action.status}
+                                    type="button"
+                                    disabled={
+                                      statusMutation.isPending
+                                    }
+                                    onClick={() =>
+                                      handleStatusChange(
+                                        appointment,
+                                        action.status
+                                      )
+                                    }
+                                    className={`inline-flex items-center gap-1 rounded-lg border px-3 py-1.5 text-xs font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${action.className}`}
+                                  >
+                                    {isUpdating ? (
+                                      <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                                    ) : (
+                                      <Icon className="h-3.5 w-3.5" />
+                                    )}
+
+                                    {action.label}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          ) : (
+                            <span className="text-sm text-gray-400">
+                              —
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -238,57 +407,106 @@ const Appointments = () => {
 
           {/* Mobile cards */}
           <div className="space-y-4 md:hidden">
-            {appointments.map((appointment) => (
-              <div
-                key={appointment.id}
-                className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <h2 className="font-semibold text-gray-900">
-                      {appointment.patient_name || "Unknown patient"}
-                    </h2>
+            {appointments.map((appointment) => {
+              const actions = getAvailableActions(appointment);
 
-                    <p className="mt-1 text-sm text-gray-500">
-                      Dr. {appointment.doctor_name || "Unknown doctor"}
+              return (
+                <div
+                  key={appointment.id}
+                  className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h2 className="font-semibold text-gray-900">
+                        {appointment.patient_name || "Unknown patient"}
+                      </h2>
+
+                      <p className="mt-1 text-sm text-gray-500">
+                        Dr.{" "}
+                        {appointment.doctor_name ||
+                          "Unknown doctor"}
+                      </p>
+                    </div>
+
+                    <span
+                      className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-medium ${getStatusClasses(
+                        appointment.status
+                      )}`}
+                    >
+                      {formatStatus(appointment.status)}
+                    </span>
+                  </div>
+
+                  <div className="mt-4 space-y-2 border-t border-gray-100 pt-4 text-sm">
+                    <p>
+                      <span className="font-medium text-gray-700">
+                        Department:
+                      </span>{" "}
+                      {appointment.department_name || "—"}
+                    </p>
+
+                    <p>
+                      <span className="font-medium text-gray-700">
+                        Date & Time:
+                      </span>{" "}
+                      {formatDate(
+                        appointment.appointment_date
+                      )}
+                    </p>
+
+                    <p>
+                      <span className="font-medium text-gray-700">
+                        Reason:
+                      </span>{" "}
+                      {appointment.reason || "—"}
                     </p>
                   </div>
 
-                  <span
-                    className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-medium ${getStatusClasses(
-                      appointment.status
-                    )}`}
-                  >
-                    {formatStatus(appointment.status)}
-                  </span>
+                  {/* Mobile actions */}
+                  {actions.length > 0 && (
+                    <div className="mt-4 border-t border-gray-100 pt-4">
+                      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        Actions
+                      </p>
+
+                      <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                        {actions.map((action) => {
+                          const Icon = action.icon;
+                          const isUpdating =
+                            statusMutation.isPending &&
+                            statusMutation.variables
+                              ?.appointmentId ===
+                              appointment.id;
+
+                          return (
+                            <button
+                              key={action.status}
+                              type="button"
+                              disabled={statusMutation.isPending}
+                              onClick={() =>
+                                handleStatusChange(
+                                  appointment,
+                                  action.status
+                                )
+                              }
+                              className={`inline-flex items-center justify-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${action.className}`}
+                            >
+                              {isUpdating ? (
+                                <RefreshCw className="h-4 w-4 animate-spin" />
+                              ) : (
+                                <Icon className="h-4 w-4" />
+                              )}
+
+                              {action.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </div>
-
-                <div className="mt-4 space-y-2 border-t border-gray-100 pt-4 text-sm">
-                  <p>
-                    <span className="font-medium text-gray-700">
-                      Department:
-                    </span>{" "}
-                    {appointment.department_name || "—"}
-                  </p>
-
-                  <p>
-                    <span className="font-medium text-gray-700">
-                      Date & Time:
-                    </span>{" "}
-                    {formatDate(
-                      appointment.appointment_date
-                    )}
-                  </p>
-
-                  <p>
-                    <span className="font-medium text-gray-700">
-                      Reason:
-                    </span>{" "}
-                    {appointment.reason || "—"}
-                  </p>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </>
       )}
