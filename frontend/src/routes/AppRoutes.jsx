@@ -16,6 +16,10 @@ import CreateDoctor from "../pages/Doctors/CreateDoctor";
 import EditDoctor from "../pages/Doctors/EditDoctor";
 import Appointments from "../pages/Appointments/Appointments";
 import CreateAppointment from "../pages/Appointments/CreateAppointment";
+import MedicalRecords from "../pages/medical-records/MedicalRecords";
+import MedicalRecordDetails from "../pages/medical-records/MedicalRecordDetails";
+import CreateMedicalRecord from "../pages/medical-records/CreateMedicalRecord";
+import EditMedicalRecord from "../pages/medical-records/EditMedicalRecord";
 
 const AppRoutes = () => {
   return (
@@ -40,6 +44,12 @@ const AppRoutes = () => {
 
           <Route path="/appointments" element={<Appointments />} />
           <Route path="/appointments/new" element={<CreateAppointment />} />
+
+          <Route path="/medical-records/" element={<MedicalRecords />} />
+          <Route path="/medical-records/new/" element={<CreateMedicalRecord />} />
+          <Route path="/medical-records/:id/" element={<MedicalRecordDetails />} />
+          <Route path="/medical-records/:id/edit/" element={<EditMedicalRecord />} />
+
 
         </Route>
       </Route>
