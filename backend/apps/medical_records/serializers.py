@@ -15,6 +15,7 @@ class MedicalRecordSerializer(serializers.ModelSerializer):
     doctor_id = serializers.PrimaryKeyRelatedField(
         source="doctor",
         queryset=Doctor.objects.all(),
+        required=False,
     )
 
     class Meta:
@@ -37,10 +38,6 @@ class MedicalRecordSerializer(serializers.ModelSerializer):
         ]
 
     def validate_patient_id(self, patient):
-        """
-        Ensure the selected user actually has the patient role.
-        """
-
         if patient.user.role != "PATIENT":
             raise serializers.ValidationError(
                 "The selected user is not a patient."
@@ -49,12 +46,6 @@ class MedicalRecordSerializer(serializers.ModelSerializer):
         return patient
 
     def validate_doctor_id(self, doctor):
-        """
-        Ensure the doctor profile belongs to a doctor user
-        and, when a doctor is making the request, that it is
-        their own doctor profile.
-        """
-
         if doctor.user.role != "DOCTOR":
             raise serializers.ValidationError(
                 "The selected user is not a doctor."
@@ -73,6 +64,23 @@ class MedicalRecordSerializer(serializers.ModelSerializer):
 
         return doctor
 
+    def validate(self, attrs):
+        request = self.context.get("request")
+
+        if request and request.user.role == "DOCTOR":
+            if "doctor" not in attrs:
+                doctor = Doctor.objects.get(
+                    user=request.user
+                )
+                attrs["doctor"] = doctor
+
+        elif request and request.user.role == "ADMIN":
+            if "doctor" not in attrs:
+                raise serializers.ValidationError({
+                    "doctor_id": "This field is required."
+                })
+
+        return attrs
 
     def validate_diagnosis(self, value):
         value = value.strip()
