@@ -1,6 +1,8 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 
+from apps.doctors.models import Doctor
+
 from .models import MedicalRecord
 from .permissions import CanManageMedicalRecords
 from .serializers import MedicalRecordSerializer
@@ -29,6 +31,7 @@ class MedicalRecordListCreateView(
 
         return MedicalRecord.objects.none()
 
+        
     def get_permissions(self):
         if self.request.method == "POST":
             return [
