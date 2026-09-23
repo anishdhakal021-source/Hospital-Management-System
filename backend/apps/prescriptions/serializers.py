@@ -24,13 +24,25 @@ class PrescriptionSerializer(serializers.ModelSerializer):
         queryset=Doctor.objects.all(),
     )
 
+    patient_name = serializers.CharField(
+        source="patient.user.get_full_name",
+        read_only=True,
+    )
+
+    doctor_name = serializers.CharField(
+        source="doctor.user.get_full_name",
+        read_only=True,
+    )
+
     class Meta:
         model = Prescription
         fields = [
             "id",
             "medical_record_id",
             "patient_id",
+            "patient_name",
             "doctor_id",
+            "doctor_name",
             "prescribed_date",
             "instructions",
             "status",
@@ -100,7 +112,7 @@ class PrescriptionSerializer(serializers.ModelSerializer):
 
         return attrs
 
-        def validate_instructions(self, value):
+    def validate_instructions(self, value):
             return value.strip()
 
 
@@ -108,12 +120,30 @@ class PrescriptionSerializer(serializers.ModelSerializer):
 
 
 class PrescriptionItemSerializer(serializers.ModelSerializer):
+    medicine_name = serializers.CharField(
+        source="medicine.name",
+        read_only=True,
+    )
+
+    patient_name = serializers.CharField(
+        source="prescription.patient.user.get_full_name",
+        read_only=True,
+    )
+
+    doctor_name = serializers.CharField(
+        source="prescription.doctor.user.get_full_name",
+        read_only=True,
+    )
+
     class Meta:
         model = PrescriptionItem
         fields = [
             "id",
             "prescription",
+            "patient_name",
+            "doctor_name",
             "medicine",
+            "medicine_name",
             "quantity",
             "dosage",
             "frequency",

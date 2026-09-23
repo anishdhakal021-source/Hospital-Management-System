@@ -20,6 +20,10 @@ import MedicalRecords from "../pages/medical-records/MedicalRecords";
 import MedicalRecordDetails from "../pages/medical-records/MedicalRecordDetails";
 import CreateMedicalRecord from "../pages/medical-records/CreateMedicalRecord";
 import EditMedicalRecord from "../pages/medical-records/EditMedicalRecord";
+import Prescriptions from "../pages/Prescriptions/Prescriptions";
+import PrescriptionDetails from "../pages/Prescriptions/PrescriptionDetails";
+import CreatePrescriptionItem from "../pages/Prescriptions/CreatePrescriptionItem";
+import EditPrescriptionItem from "../pages/Prescriptions/EditPrescriptionItem";
 
 const AppRoutes = () => {
   return (
@@ -50,6 +54,11 @@ const AppRoutes = () => {
           <Route path="/medical-records/:id/" element={<MedicalRecordDetails />} />
           <Route path="/medical-records/:id/edit/" element={<EditMedicalRecord />} />
 
+          <Route path="/prescriptions" element={<Prescriptions />} />
+          <Route path="/prescriptions/:id" element={<PrescriptionDetails />} />
+
+          <Route path="/prescriptions/:id/items/new" element={<CreatePrescriptionItem />} />
+          <Route path="/prescriptions/:id/items/:itemId/edit" element={<EditPrescriptionItem />} />
 
         </Route>
       </Route>
