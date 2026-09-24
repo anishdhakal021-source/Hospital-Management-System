@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 
 import Login from "../pages/Login/Login";
+import Register from "../pages/Login/Register";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import ProtectedRoute from "./ProtectedRoute";
 import AppLayout from "../layouts/AppLayout";
@@ -31,6 +32,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
 
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>

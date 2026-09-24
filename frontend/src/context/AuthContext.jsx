@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import {
   loginUser,
+  registerUser,
   getCurrentUser,
 } from "../features/auth/authApi";
 import {
@@ -36,7 +37,7 @@ export const AuthProvider = ({ children }) => {
           localStorage.getItem("refresh_token"),
           currentUser
         );
-      } catch (error) {
+      } catch {
         clearAuthData();
         setAccessToken(null);
         setUser(null);
@@ -68,6 +69,12 @@ export const AuthProvider = ({ children }) => {
     return currentUserResponse;
   };
 
+  const register = async (formData) => {
+    await registerUser(formData);
+
+    return login(formData.username, formData.password);
+  };
+
   const logout = () => {
     clearAuthData();
     setAccessToken(null);
@@ -80,6 +87,7 @@ export const AuthProvider = ({ children }) => {
     loading,
     isAuthenticated: Boolean(accessToken),
     login,
+    register,
     logout,
   };
 

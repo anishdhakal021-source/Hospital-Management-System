@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 const Login = () => {
@@ -14,6 +14,7 @@ const Login = () => {
   });
 
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
 
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
@@ -31,6 +32,7 @@ const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
+    setNotice("");
 
     if (!formData.username.trim() || !formData.password) {
       setError("Username and password are required.");
@@ -73,6 +75,12 @@ const Login = () => {
           </div>
         )}
 
+        {notice && (
+          <div className="mb-5 rounded-lg bg-blue-50 px-4 py-3 text-sm text-blue-700">
+            {notice}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label
@@ -95,12 +103,26 @@ const Login = () => {
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className="mb-2 block text-sm font-medium text-slate-700"
-            >
-              Password
-            </label>
+            <div className="mb-2 flex items-center justify-between">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-slate-700"
+              >
+                Password
+              </label>
+
+              <button
+                type="button"
+                onClick={() =>
+                  setNotice(
+                    "Password reset is not available yet. Please contact the system administrator."
+                  )
+                }
+                className="text-sm font-medium text-blue-600 hover:text-blue-700"
+              >
+                Forgot password?
+              </button>
+            </div>
 
             <input
               id="password"
@@ -122,6 +144,16 @@ const Login = () => {
             {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
+
+        <p className="mt-6 text-center text-sm text-slate-600">
+          Don't have an account?{" "}
+          <Link
+            to="/register"
+            className="font-medium text-blue-600 hover:text-blue-700"
+          >
+            Sign up
+          </Link>
+        </p>
       </div>
     </div>
   );

@@ -9,6 +9,12 @@ export const loginUser = async (username, password) => {
   return response.data;
 };
 
+export const registerUser = async (payload) => {
+  const response = await apiClient.post("/patients/register/", payload);
+
+  return response.data;
+};
+
 export const refreshAccessToken = async (refreshToken) => {
   const response = await apiClient.post("/users/token/refresh/", {
     refresh: refreshToken,
