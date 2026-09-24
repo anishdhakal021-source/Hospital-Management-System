@@ -3,12 +3,18 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Save } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+import { useAuth } from "../../context/AuthContext";
+
 import { getPatients } from "../../services/patientService";
 import { createMedicalRecord } from "../../services/medicalRecordService";
+import { getDoctors } from "../../services/doctorService";
+import { getAppointments } from "../../services/appointmentService";
 
 const CreateMedicalRecord = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
+  const { user } = useAuth();
 
   const [formData, setFormData] = useState({
     patient_id: "",
@@ -19,7 +25,7 @@ const CreateMedicalRecord = () => {
 
   const [formError, setFormError] = useState("");
 
-  // Load patients for the patient selection field
+  // Load patients.
   const {
     data: patients = [],
     isLoading: patientsLoading,
@@ -29,11 +35,81 @@ const CreateMedicalRecord = () => {
     queryFn: getPatients,
   });
 
+  // Load doctors so we can find the logged-in doctor's profile.
+  const {
+    data: doctors = [],
+    isLoading: doctorsLoading,
+    isError: doctorsError,
+  } = useQuery({
+    queryKey: ["doctors"],
+    queryFn: getDoctors,
+  });
+
+  // Load appointments for filtering the doctor's patients.
+  const {
+    data: appointments = [],
+    isLoading: appointmentsLoading,
+    isError: appointmentsError,
+  } = useQuery({
+    queryKey: ["appointments"],
+    queryFn: getAppointments,
+  });
+
+  /*
+   * Find the Doctor profile belonging to the currently
+   * logged-in user.
+   */
+  const currentDoctor = doctors.find(
+    (doctor) => doctor.username === user?.username
+  );
+
+  /*
+   * Get the doctor's name from the doctor profile.
+   * This is used to identify the doctor's appointments.
+   */
+  const currentDoctorName = currentDoctor
+    ? `${currentDoctor.first_name} ${currentDoctor.last_name}`.trim()
+    : "";
+
+  /*
+   * Get patients who have appointments with the logged-in doctor.
+   *
+   * We only consider SCHEDULED and COMPLETED appointments
+   * because these represent actual doctor-patient interactions.
+   */
+  const doctorAppointmentPatientNames = new Set(
+    appointments
+      .filter(
+        (appointment) =>
+          appointment.doctor_name === currentDoctorName &&
+          ["SCHEDULED", "COMPLETED"].includes(appointment.status)
+      )
+      .map((appointment) => appointment.patient_name)
+      .filter(Boolean)
+  );
+
+  /*
+   * Filter the patient list so doctors only see patients
+   * who have appointments with them.
+   */
+  const availablePatients =
+    user?.role === "DOCTOR"
+      ? patients.filter((patient) => {
+          const patientName =
+            patient.user_name ||
+            `${patient.first_name} ${patient.last_name}`.trim() ||
+            patient.name ||
+            `Patient #${patient.id}`;
+
+          return doctorAppointmentPatientNames.has(patientName);
+        })
+      : patients;
+
   const createMutation = useMutation({
     mutationFn: createMedicalRecord,
 
     onSuccess: () => {
-      // Refresh the medical-record list after successful creation
+      // Refresh the medical-record list after successful creation.
       queryClient.invalidateQueries({
         queryKey: ["medical-records"],
       });
@@ -42,15 +118,16 @@ const CreateMedicalRecord = () => {
     },
 
     onError: (error) => {
-      const backendError = error?.response?.data;
+      console.log(
+        "Medical record creation error:",
+        error.response?.data
+      );
 
-      if (backendError?.detail) {
-        setFormError(backendError.detail);
-      } else {
-        setFormError(
-          "Unable to create the medical record. Please check the form."
-        );
-      }
+      setFormError(
+        error.response?.data
+          ? JSON.stringify(error.response.data)
+          : "Unable to create the medical record. Please check the form."
+      );
     },
   });
 
@@ -78,13 +155,42 @@ const CreateMedicalRecord = () => {
       return;
     }
 
-    createMutation.mutate({
+    /*
+     * For doctors, automatically use the logged-in doctor's ID.
+     *
+     * For other roles, doctor_id is not automatically added here.
+     * The backend can continue to enforce the appropriate rules.
+     */
+    const payload = {
       patient_id: Number(formData.patient_id),
       diagnosis: formData.diagnosis.trim(),
       symptoms: formData.symptoms.trim(),
       notes: formData.notes.trim(),
-    });
+    };
+
+    if (user?.role === "DOCTOR") {
+      if (!currentDoctor?.id) {
+        setFormError(
+          "Unable to identify your doctor profile. Please contact the administrator."
+        );
+        return;
+      }
+
+      payload.doctor_id = Number(currentDoctor.id);
+    }
+
+    createMutation.mutate(payload);
   };
+
+  const isLoadingPatients =
+    patientsLoading ||
+    (user?.role === "DOCTOR" &&
+      (doctorsLoading || appointmentsLoading));
+
+  const hasLoadingError =
+    patientsError ||
+    (user?.role === "DOCTOR" &&
+      (doctorsError || appointmentsError));
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
@@ -118,9 +224,10 @@ const CreateMedicalRecord = () => {
       )}
 
       {/* Patient loading error */}
-      {patientsError && (
+      {hasLoadingError && (
         <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          Unable to load patients. Please refresh the page and try again.
+          Unable to load the required data. Please refresh the page and try
+          again.
         </div>
       )}
 
@@ -143,26 +250,34 @@ const CreateMedicalRecord = () => {
             name="patient_id"
             value={formData.patient_id}
             onChange={handleChange}
-            disabled={patientsLoading || createMutation.isPending}
+            disabled={isLoadingPatients || createMutation.isPending}
             className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500 disabled:bg-gray-100"
           >
             <option value="">
-              {patientsLoading
+              {isLoadingPatients
                 ? "Loading patients..."
                 : "Select a patient"}
             </option>
 
-            {patients.map((patient) => (
-              <option
-                key={patient.id}
-                value={patient.id}
-              >
+            {availablePatients.map((patient) => (
+              <option key={patient.id} value={patient.id}>
                 {patient.user_name ||
+                  `${patient.first_name} ${patient.last_name}`.trim() ||
                   patient.name ||
                   `Patient #${patient.id}`}
               </option>
             ))}
           </select>
+
+          {/* Helpful message for doctors with no matching appointments */}
+          {user?.role === "DOCTOR" &&
+            !isLoadingPatients &&
+            availablePatients.length === 0 && (
+              <p className="mt-2 text-sm text-gray-500">
+                No patients with scheduled or completed appointments were
+                found for you.
+              </p>
+            )}
         </div>
 
         {/* Diagnosis */}
@@ -241,7 +356,10 @@ const CreateMedicalRecord = () => {
 
           <button
             type="submit"
-            disabled={createMutation.isPending}
+            disabled={
+              createMutation.isPending ||
+              (user?.role === "DOCTOR" && availablePatients.length === 0)
+            }
             className="inline-flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
           >
             <Save size={17} />

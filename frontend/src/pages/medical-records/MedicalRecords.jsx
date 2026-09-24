@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { FileText, RefreshCw } from "lucide-react";
 import {useNavigate} from "react-router-dom"
 import { getMedicalRecords } from "../../services/medicalRecordService";
+import { useAuth } from "../../context/AuthContext";
 
 const MedicalRecords = () => {
   const navigate = useNavigate();
@@ -17,6 +18,10 @@ const MedicalRecords = () => {
     queryKey: ["medical-records"],
     queryFn: getMedicalRecords,
   });
+
+  const {user}=useAuth();
+  const canCreateMedicalRecord =  user?.role === "ADMIN" || user?.role === "DOCTOR";
+
 
 
   return (
@@ -35,13 +40,15 @@ const MedicalRecords = () => {
 
 
          <div className="flex flex-col gap-2 sm:flex-row">
-          <button
-            type="button"
-            onClick={() => navigate("/medical-records/new")}
-            className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
-          >
-            Create Record
-          </button>
+          {canCreateMedicalRecord &&(
+            <button
+              type="button"
+              onClick={() => navigate("/medical-records/new")}
+              className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
+            >
+              Create Record
+            </button>
+          )}
 
           <button
             type="button"

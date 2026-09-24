@@ -4,6 +4,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
+import {useAuth} from "../../context/AuthContext";
 import {
   ArrowLeft,
   CalendarDays,
@@ -20,6 +21,9 @@ const MedicalRecordDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient=useQueryClient();
+  const { user } = useAuth();
+  const canManageMedicalRecord =  user?.role === "ADMIN" || user?.role === "DOCTOR";
+
   const deleteMutation = useMutation({
     mutationFn: ()=>deleteMedicalRecord(id),
 
@@ -155,24 +159,26 @@ const MedicalRecordDetails = () => {
         </div>
 
         {/* Record actions */}
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => navigate(`/medical-records/${id}/edit`)}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
-          >
-            Edit
-          </button>
+        {canManageMedicalRecord && (
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => navigate(`/medical-records/${id}/edit`)}
+              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+            >
+              Edit
+            </button>
 
-          <button
-            type="button"
-            onClick={handleDelete}
-            disabled={deleteMutation.isPending}
-            className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {deleteMutation.isPending ? "Deleting..." : "Delete"}
-          </button>
-        </div>
+            <button
+              type="button"
+              onClick={handleDelete}
+              disabled={deleteMutation.isPending}
+              className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {deleteMutation.isPending ? "Deleting..." : "Delete"}
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Patient and Doctor */}

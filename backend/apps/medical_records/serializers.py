@@ -17,12 +17,24 @@ class MedicalRecordSerializer(serializers.ModelSerializer):
         queryset=Doctor.objects.all(),
     )
 
+    patient_name = serializers.CharField(
+        source="patient.user.get_full_name",
+        read_only=True,
+    )
+
+    doctor_name = serializers.CharField(
+        source="doctor.user.get_full_name",
+        read_only=True,
+    )
+
     class Meta:
         model = MedicalRecord
         fields = [
             "id",
             "patient_id",
+            "patient_name",
             "doctor_id",
+            "doctor_name",
             "diagnosis",
             "symptoms",
             "notes",
@@ -32,6 +44,8 @@ class MedicalRecordSerializer(serializers.ModelSerializer):
 
         read_only_fields = [
             "id",
+            "patient_name",
+            "doctor_name",
             "created_at",
             "updated_at",
         ]
