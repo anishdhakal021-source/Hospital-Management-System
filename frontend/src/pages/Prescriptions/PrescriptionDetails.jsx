@@ -1,13 +1,17 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, AlertCircle, RefreshCw } from "lucide-react";
+import { ArrowLeft, AlertCircle, RefreshCw, Plus} from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
+import {useAuth } from "../../context/AuthContext"
 
-import { getPrescription,getPrescriptionItems, deletePrescriptionItem } from "../../services/prescriptionService";
+import { getPrescription,getPrescriptionItems, deletePrescriptionItem, deletePrescription } from "../../services/prescriptionService";
 
 const PrescriptionDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user }= useAuth();
   const queryClient= useQueryClient();
+
+  const canManagePrescription = user?.role ==="ADMIN" || user?.role ==="DOCTOR";
   const deleteItemMutation = useMutation({
     mutationFn: deletePrescriptionItem,
 
@@ -15,6 +19,19 @@ const PrescriptionDetails = () => {
       queryClient.invalidateQueries({
         queryKey: ["prescription-items"],
       });
+    },
+  });
+
+  const deletePrescriptionMutation = useMutation({
+    mutationFn: deletePrescription,
+
+    onSuccess: () => {
+      // Refresh the prescription list after deletion.
+      queryClient.invalidateQueries({
+        queryKey: ["prescriptions"],
+      });
+
+      navigate("/prescriptions");
     },
   });
 
@@ -110,6 +127,52 @@ const PrescriptionDetails = () => {
           <p className="mt-1 text-sm text-gray-500">
             Prescription #{prescription.id}
           </p>
+        </div>
+        <div className="ml-auto flex items-center gap-2">
+          {canManagePrescription && (
+            <button
+              type="button"
+              onClick={() =>
+                navigate(`/prescriptions/${id}/items/new`)
+              }
+              className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"
+            >
+              <Plus size={16} />
+              Add Medicine
+            </button>
+          )}
+          {canManagePrescription && (
+            <button
+              type="button"
+              onClick={() =>
+                navigate(`/prescriptions/${id}/edit`)
+              }
+              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+            >
+              Edit
+            </button>
+          )}  
+
+          {canManagePrescription && (
+            <button
+              type="button"
+              onClick={() => {
+                const confirmed = window.confirm(
+                  "Are you sure you want to delete this prescription?"
+                );
+
+                if (confirmed) {
+                  deletePrescriptionMutation.mutate(Number(id));
+                }
+              }}
+              disabled={deletePrescriptionMutation.isPending}
+              className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {deletePrescriptionMutation.isPending
+                ? "Deleting..."
+                : "Delete"}
+            </button>
+          )}
         </div>
       </div>
 
@@ -243,35 +306,29 @@ const PrescriptionDetails = () => {
                     </td>
                     
                     <td className="px-4 py-3 text-sm text-gray-700">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const confirmed = window.confirm(
-                            "Are you sure you want to remove this medicine?"
-                          );
+                      {canManagePrescription && (
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              navigate(`/prescriptions/${id}/items/${item.id}/edit`)
+                            }
+                            className="..."
+                          >
+                            Edit
+                          </button>
 
-                          if (confirmed) {
-                            deleteItemMutation.mutate(item.id);
-                          }
-                        }}
-                        disabled={deleteItemMutation.isPending}
-                        className="rounded-lg bg-red-600 px-3 py-2 text-sm text-white hover:bg-red-700 disabled:opacity-50"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                    <td className="px-4 py-3 text-sm text-gray-700">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          navigate(
-                            `/prescriptions/${id}/items/${item.id}/edit`
-                          )
-                        }
-                        className="rounded-lg bg-blue-600 px-3 py-2 text-sm text-white hover:bg-blue-700"
-                      >
-                        Edit
-                      </button>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              deleteItemMutation.mutate(item.id)
+                            }
+                            className="..."
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      )}
                     </td>
                   </tr>
                   
