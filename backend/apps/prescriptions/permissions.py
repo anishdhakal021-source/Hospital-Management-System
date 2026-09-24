@@ -24,6 +24,8 @@ class CanManagePrescriptionItem(BasePermission):
 
     Doctors can manage prescription items only when the
     related prescription belongs to that doctor.
+
+    Patients can view only their own prescription items.
     """
 
     allowed_roles = {
@@ -32,10 +34,14 @@ class CanManagePrescriptionItem(BasePermission):
     }
 
     def has_permission(self, request, view):
-        return (
-            request.user.is_authenticated
-            and request.user.role in self.allowed_roles
-        )
+        if not request.user.is_authenticated:
+            return False
+
+        # Patients can only view prescription items.
+        if request.user.role == "PATIENT":
+            return request.method in {"GET", "HEAD", "OPTIONS"}
+
+        return request.user.role in self.allowed_roles
 
     def has_object_permission(self, request, view, obj):
         if request.user.role == "ADMIN":
@@ -43,5 +49,8 @@ class CanManagePrescriptionItem(BasePermission):
 
         if request.user.role == "DOCTOR":
             return obj.prescription.doctor.user == request.user
+
+        if request.user.role == "PATIENT":
+            return obj.prescription.patient.user == request.user
 
         return False

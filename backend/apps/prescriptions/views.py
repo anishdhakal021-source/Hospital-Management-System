@@ -109,12 +109,22 @@ class PrescriptionItemListCreateView(generics.ListCreateAPIView):
             "prescription__doctor",
         )
 
-        if self.request.user.role == "ADMIN":
+        user = self.request.user
+
+        if user.role == "ADMIN":
             return queryset
 
-        return queryset.filter(
-            prescription__doctor__user=self.request.user
-        )
+        if user.role == "DOCTOR":
+            return queryset.filter(
+                prescription__doctor__user=user
+            )
+
+        if user.role == "PATIENT":
+            return queryset.filter(
+                prescription__patient__user=user
+            )
+
+        return queryset.none()
 
 
 class PrescriptionItemDetailView(generics.RetrieveUpdateDestroyAPIView):
