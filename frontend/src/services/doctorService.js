@@ -1,5 +1,10 @@
 import apiClient from "../api/apiClient";
 
+export const getPublicDoctors = async () => {
+  const response = await apiClient.get("/doctors/public/");
+  return response.data;
+};
+
 export const getDoctors = async () => {
   const response = await apiClient.get("/doctors/");
   return response.data;

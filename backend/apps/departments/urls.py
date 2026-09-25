@@ -1,20 +1,18 @@
 from django.urls import path
 
-from .views import DepartmentListCreateView
-
-
-urlpatterns = [
-    path("", DepartmentListCreateView.as_view(), name="department-list-create"),
-]
-from django.urls import path
-
 from .views import (
     DepartmentDetailView,
     DepartmentListCreateView,
+    PublicDepartmentListView,
 )
 
 
 urlpatterns = [
+    path(
+        "public/",
+        PublicDepartmentListView.as_view(),
+        name="department-public-list",
+    ),
     path(
         "",
         DepartmentListCreateView.as_view(),

@@ -1,5 +1,10 @@
 import apiClient from "../api/apiClient";
 
+export const getPublicDepartments = async () => {
+  const response = await apiClient.get("/departments/public/");
+  return response.data;
+};
+
 export const getDepartments = async () => {
   const response = await apiClient.get("/departments/");
   return response.data;

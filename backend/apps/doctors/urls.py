@@ -4,10 +4,16 @@ from .views import (
     DoctorDetailView,
     DoctorListCreateView,
     DoctorRegistrationView,
+    PublicDoctorListView,
 )
 
 
 urlpatterns = [
+    path(
+        "public/",
+        PublicDoctorListView.as_view(),
+        name="doctor-public-list",
+    ),
     path(
         "",
         DoctorListCreateView.as_view(),

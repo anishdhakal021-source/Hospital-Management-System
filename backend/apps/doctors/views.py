@@ -1,12 +1,29 @@
 from django.db import transaction
 from rest_framework import generics, status
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from apps.users.models import User
 
 from .models import Doctor
 from .permissions import CanReadDoctors, IsDoctorManager
-from .serializers import DoctorRegistrationSerializer, DoctorSerializer
+from .serializers import (
+    DoctorRegistrationSerializer,
+    DoctorSerializer,
+    PublicDoctorSerializer,
+)
+
+
+class PublicDoctorListView(generics.ListAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = PublicDoctorSerializer
+    queryset = Doctor.objects.select_related(
+        "user",
+        "department",
+    ).filter(
+        is_available=True,
+        department__is_active=True,
+    )
 
 
 class DoctorListCreateView(generics.ListCreateAPIView):
