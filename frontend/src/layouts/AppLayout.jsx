@@ -71,7 +71,7 @@ const navigationByRole = {
   ],
 };
 
-const AppLayout = () => {
+const AppLayout = ({ children }) => {
   const { user, logout } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -195,7 +195,7 @@ const AppLayout = () => {
 
         {/* Page */}
         <main className="p-4 sm:p-6">
-          <Outlet />
+          {children ?? <Outlet />}
         </main>
       </div>
     </div>

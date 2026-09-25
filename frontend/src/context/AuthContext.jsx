@@ -50,29 +50,46 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (username, password) => {
-    const data = await loginUser(username, password);
+    setLoading(true);
 
-    saveAuthData(data.access, data.refresh);
+    try {
+      const data = await loginUser(username, password);
 
-    setAccessToken(data.access);
+      saveAuthData(data.access, data.refresh);
 
-    const currentUserResponse = await getCurrentUser();
+      setAccessToken(data.access);
 
-    saveAuthData(
-      data.access,
-      data.refresh,
-      currentUserResponse
-    );
+      const currentUserResponse = await getCurrentUser();
 
-    setUser(currentUserResponse);
+      saveAuthData(
+        data.access,
+        data.refresh,
+        currentUserResponse
+      );
 
-    return currentUserResponse;
+      setUser(currentUserResponse);
+
+      return currentUserResponse;
+    } catch (error) {
+      clearAuthData();
+      setAccessToken(null);
+      setUser(null);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
   };
 
   const register = async (formData) => {
-    await registerUser(formData);
+    setLoading(true);
 
-    return login(formData.username, formData.password);
+    try {
+      await registerUser(formData);
+
+      return await login(formData.username, formData.password);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const logout = () => {

@@ -1,5 +1,7 @@
 import { Routes, Route } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
+import Home from "../pages/Home/Home";
 import Login from "../pages/Login/Login";
 import Register from "../pages/Login/Register";
 import Dashboard from "../pages/Dashboard/Dashboard";
@@ -33,9 +35,41 @@ import EditMedicine from "../pages/Medicine/EditMedicine";
 import MedicineBatches from "../pages/Medicine/MedicineBatches";
 import CreateMedicineBatch from "../pages/Medicine/CreateMedicineBatch";
 
+const SectionEntry = ({ children }) => {
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <p className="text-slate-600">Loading...</p>
+      </div>
+    );
+  }
+
+  return isAuthenticated ? <AppLayout>{children}</AppLayout> : <Home />;
+};
+
+const DepartmentsEntry = () => (
+  <SectionEntry>
+    <Departments />
+  </SectionEntry>
+);
+
+const DoctorsEntry = () => (
+  <SectionEntry>
+    <Doctors />
+  </SectionEntry>
+);
+
 const AppRoutes = () => {
   return (
     <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/services" element={<Home />} />
+      <Route path="/departments" element={<DepartmentsEntry />} />
+      <Route path="/doctors" element={<DoctorsEntry />} />
+      <Route path="/about" element={<Home />} />
+      <Route path="/contact" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
@@ -47,11 +81,9 @@ const AppRoutes = () => {
           <Route path="/patients/new" element={<CreatePatient />} />
           <Route path="/patients/:id" element={<PatientDetails />} />
 
-          <Route path="/departments" element={<Departments />} />
           <Route path="/departments/new" element={<CreateDepartment />} />
           <Route path="/departments/:id/edit" element={<EditDepartment />} />
 
-          <Route path="/doctors" element={<Doctors />} />
           <Route path="/doctors/new" element={<CreateDoctor />} />
           <Route path="/doctors/:id/edit" element={<EditDoctor />} />
 

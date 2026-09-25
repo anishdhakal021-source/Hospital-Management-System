@@ -85,6 +85,27 @@ class DoctorSerializer(serializers.ModelSerializer):
         return user
 
 
+class PublicDoctorSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+    department_name = serializers.CharField(
+        source="department.name",
+        read_only=True,
+    )
+
+    class Meta:
+        model = Doctor
+        fields = [
+            "id",
+            "name",
+            "specialization",
+            "department_name",
+            "is_available",
+        ]
+
+    def get_name(self, obj):
+        return obj.user.get_full_name() or obj.user.username
+
+
 class DoctorRegistrationSerializer(UserAccountSerializer):
     department_id = serializers.PrimaryKeyRelatedField(
         source="department",
