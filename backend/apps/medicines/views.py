@@ -1,4 +1,5 @@
-from rest_framework import generics
+from django.db.models.deletion import ProtectedError
+from rest_framework import generics, serializers
 
 from .models import Medicine, MedicineBatch
 from .permissions import (
@@ -22,6 +23,19 @@ class MedicineDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = MedicineSerializer
     permission_classes = [CanManageMedicines]
 
+    def perform_destroy(self, instance):
+        try:
+            instance.delete()
+        except ProtectedError:
+            raise serializers.ValidationError(
+                {
+                    "detail": (
+                        "This medicine cannot be deleted because "
+                        "it is used in existing prescriptions. "
+                        "Deactivate it instead."
+                    )
+                }
+            )
 
 
 # Medicine Batch

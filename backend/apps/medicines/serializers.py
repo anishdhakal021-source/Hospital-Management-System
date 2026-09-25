@@ -38,11 +38,17 @@ class MedicineSerializer(serializers.ModelSerializer):
 # Medicine Batch Serializer
 
 class MedicineBatchSerializer(serializers.ModelSerializer):
+    medicine_name = serializers.CharField(
+        source="medicine.name",
+        read_only=True,
+    )
+
     class Meta:
         model = MedicineBatch
         fields = [
             "id",
             "medicine",
+            "medicine_name",
             "batch_number",
             "expiry_date",
             "quantity",
@@ -53,6 +59,7 @@ class MedicineBatchSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = [
             "id",
+            "medicine_name",
             "created_at",
             "updated_at",
         ]
