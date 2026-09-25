@@ -27,6 +27,11 @@ import EditPrescription from "../pages/Prescriptions/EditPrescription"
 import CreatePrescriptionItem from "../pages/Prescriptions/CreatePrescriptionItem";
 import EditPrescriptionItem from "../pages/Prescriptions/EditPrescriptionItem";
 import CreatePrescription from "../pages/Prescriptions/CreatePrescription";
+import Medicines from "../pages/Medicine/Medicines";
+import CreateMedicine from "../pages/Medicine/CreateMedicine";
+import EditMedicine from "../pages/Medicine/EditMedicine";
+import MedicineBatches from "../pages/Medicine/MedicineBatches";
+import CreateMedicineBatch from "../pages/Medicine/CreateMedicineBatch";
 
 const AppRoutes = () => {
   return (
@@ -66,6 +71,13 @@ const AppRoutes = () => {
           <Route path="/prescriptions/:id/items/new" element={<CreatePrescriptionItem />} />
           <Route path="/prescriptions/:id/items/:itemId/edit" element={<EditPrescriptionItem />} />
 
+          <Route path="/medicines" element={<Medicines />}/>
+          <Route path="/medicines/new" element = {<CreateMedicine />}/>
+          <Route path="/medicines/:id/edit" element = {<EditMedicine />}/>
+
+
+          <Route path="/medicine-batches" element = {<MedicineBatches />}/>
+          <Route path="/medicine-batches/new" element = {<CreateMedicineBatch />}/>
         </Route>
       </Route>
 
