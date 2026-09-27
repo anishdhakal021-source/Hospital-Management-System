@@ -6,6 +6,12 @@ export const getMedicines = async () => {
   return response.data;
 };
 
+// Get a Medicine
+export const getMedicine = async (medicineId) => {
+  const response = await apiClient.get(`/medicines/${medicineId}/`);
+  return response.data;
+};
+
 // Create a medicine
 export const createMedicine = async (medicineData) => {
   const response = await apiClient.post("/medicines/", medicineData);
@@ -58,8 +64,7 @@ export const updateMedicineBatch = async (batchId, batchData) => {
 
 // Delete a medicine batch
 export const deleteMedicineBatch = async (batchId) => {
-  const response = await apiClient.delete(
+  await apiClient.delete(
     `/medicines/batches/${batchId}/`
   );
-  return response.data;
 };

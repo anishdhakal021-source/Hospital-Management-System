@@ -7,8 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 
-import apiClient from "../../api/apiClient";
-import { updateMedicine } from "../../services/medicineService";
+import { getMedicine, updateMedicine } from "../../services/medicineService";
 
 const EditMedicine = () => {
   const { id } = useParams();
@@ -31,11 +30,9 @@ const EditMedicine = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["medicine", id],
-    queryFn: async () => {
-      const response = await apiClient.get(`/medicines/${id}/`);
-      return response.data;
-    },
+    queryKey: ["medicine",id],
+    queryFn: ()=> getMedicine(id),
+    enabled: !!id,
   });
 
   useEffect(() => {

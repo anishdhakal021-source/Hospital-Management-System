@@ -1,11 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
-import { RefreshCw, Package, Plus } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { RefreshCw, Package, Plus, Edit, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
-import { getMedicineBatches } from "../../services/medicineService";
+import { deleteMedicineBatch, getMedicineBatches } from "../../services/medicineService";
 
 const MedicineBatches = () => {
+  const queryClient=useQueryClient();
   const {
     data: batches = [],
     isLoading,
@@ -20,6 +21,31 @@ const MedicineBatches = () => {
   const { user } = useAuth();
 
   const canCreateBatch = user?.role === "ADMIN" || user?.role === "PHARMACIST";
+  const canEditBatch = user?.role === "ADMIN" || user?.role === "PHARMACIST";
+  const canDeleteBatch = user?.role === "ADMIN";
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteMedicineBatch,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["medicine-batches"],
+      });
+    },
+
+    onError: (error) => {
+      console.error(
+        "Medicine batch deletion error:",
+        error.response?.data
+      );
+
+      alert(
+        error.response?.data
+          ? JSON.stringify(error.response.data)
+          : "Unable to delete medicine batch."
+      );
+    },
+  });
 
   return (
     <div className="space-y-6">
@@ -123,6 +149,12 @@ const MedicineBatches = () => {
                   <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
                     Selling Price
                   </th>
+
+                  {canEditBatch && (
+                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                      Action
+                    </th>
+                  )}
                 </tr>
               </thead>
 
@@ -151,6 +183,40 @@ const MedicineBatches = () => {
 
                     <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-700">
                       {batch.selling_price}
+                    </td>
+
+                    <td className="px-4 py-3">
+                      <div className="flex gap-2">
+                        {canEditBatch && (
+                          <Link
+                            to={`/medicine-batches/${batch.id}/edit`}
+                            className="inline-flex items-center gap-1 rounded-lg bg-blue-600 px-3 py-1.5 text-sm text-white hover:bg-blue-700"
+                          >
+                            <Edit size={16} />
+                            Edit
+                          </Link>
+                        )}
+
+                        {canDeleteBatch && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const confirmed = window.confirm(
+                                `Are you sure you want to delete batch ${batch.batch_number}?`
+                              );
+
+                              if (confirmed) {
+                                deleteMutation.mutate(batch.id);
+                              }
+                            }}
+                            disabled={deleteMutation.isPending}
+                            className="inline-flex items-center gap-1 rounded-lg bg-red-600 px-3 py-1.5 text-sm text-white hover:bg-red-700 disabled:opacity-50"
+                          >
+                            <Trash2 size={16} />
+                            Delete
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}

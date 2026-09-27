@@ -34,6 +34,7 @@ import CreateMedicine from "../pages/Medicine/CreateMedicine";
 import EditMedicine from "../pages/Medicine/EditMedicine";
 import MedicineBatches from "../pages/Medicine/MedicineBatches";
 import CreateMedicineBatch from "../pages/Medicine/CreateMedicineBatch";
+import EditMedicineBatch from "../pages/Medicine/EditMedicineBatch";
 import Users from "../pages/Users/Users";
 import UserRegistration from "../pages/Users/UserRegistration";
 
@@ -116,6 +117,7 @@ const AppRoutes = () => {
 
           <Route path="/medicine-batches" element = {<MedicineBatches />}/>
           <Route path="/medicine-batches/new" element = {<CreateMedicineBatch />}/>
+          <Route path="/medicine-batches/:id/edit" element = {<EditMedicineBatch />}/>
         </Route>
       </Route>
 
