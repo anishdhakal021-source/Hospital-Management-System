@@ -93,7 +93,8 @@ const AppLayout = ({ children }) => {
       <aside
         className={`
           fixed inset-y-0 left-0 z-50 w-64
-          transform bg-slate-900 text-white
+          flex flex-col
+          transform bg-slate-950 text-white
           transition-transform duration-300
           md:translate-x-0
           ${
@@ -104,21 +105,27 @@ const AppLayout = ({ children }) => {
         `}
       >
         {/* Sidebar header */}
-        <div className="flex items-center justify-between border-b border-slate-700 p-6">
-          <div>
-            <h1 className="text-xl font-bold">
-              HMS
-            </h1>
+        <div className="flex shrink-0 items-center justify-between border-b border-slate-800 p-5">
+          <Link to="/" className="flex items-center gap-3">
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-teal-600 to-emerald-500 flex items-center justify-center text-white shadow-md shadow-teal-500/20">
+              <Stethoscope className="w-6 h-6" />
+            </div>
 
-            <p className="mt-1 text-sm text-slate-400">
-              Hospital Management System
-            </p>
-          </div>
+            <div>
+              <h1 className="text-xl font-black tracking-tight">
+                HMS
+              </h1>
+
+              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                Hospital Management System
+              </p>
+            </div>
+          </Link>
 
           {/* Mobile close button */}
           <button
             onClick={closeSidebar}
-            className="rounded-lg p-2 hover:bg-slate-800 md:hidden"
+            className="rounded-lg p-2 text-slate-400 hover:bg-slate-900 hover:text-white md:hidden"
             aria-label="Close sidebar"
           >
             <X size={22} />
@@ -126,7 +133,7 @@ const AppLayout = ({ children }) => {
         </div>
 
         {/* Navigation */}
-        <nav className="space-y-1 p-4">
+        <nav className="min-h-0 flex-1 space-y-1 overflow-y-auto overflow-x-hidden p-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             {(navigationByRole[user?.role] || []).map((item) => {
                 const Icon = item.icon;
 
@@ -135,7 +142,7 @@ const AppLayout = ({ children }) => {
                     key={item.path}
                     to={item.path}
                     onClick={closeSidebar}
-                    className="flex items-center gap-3 rounded-lg px-4 py-3 text-slate-300 transition hover:bg-slate-800 hover:text-white"
+                    className="flex items-center gap-3 rounded-lg px-4 py-3 text-slate-400 transition hover:bg-slate-900 hover:text-teal-300"
                 >
                     <Icon size={20} />
                     <span>{item.label}</span>
@@ -145,10 +152,10 @@ const AppLayout = ({ children }) => {
         </nav>
 
         {/* Logout */}
-        <div className="absolute bottom-0 w-full border-t border-slate-700 p-4">
+        <div className="mt-auto w-full shrink-0 border-t border-slate-800 p-4">
           <button
             onClick={logout}
-            className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left hover:bg-slate-800"
+            className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-slate-400 transition hover:bg-slate-900 hover:text-teal-300"
           >
             <LogOut size={20} />
             Logout

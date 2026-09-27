@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Stethoscope } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
 const getErrorMessage = (err) => {
@@ -105,30 +105,51 @@ const Register = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-10">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
-        <div className="mb-8 text-center">
-          <h1 className="text-2xl font-bold text-slate-900">
-            Hospital Management System
-          </h1>
+    <div className="min-h-screen bg-slate-50 px-4 py-8 text-slate-800 font-sans antialiased selection:bg-teal-500 selection:text-white sm:py-12">
+      <div className="mx-auto flex w-full max-w-2xl flex-col items-start">
+        <div className="w-full rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xl shadow-slate-200/60 sm:p-8">
+          <Link
+            to="/"
+            aria-label="Back to HMS home"
+            className="mb-8 flex items-center gap-3"
+          >
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-tr from-teal-600 to-emerald-500 text-white shadow-md shadow-teal-500/20">
+              <Stethoscope className="h-6 w-6" />
+            </div>
+            <div>
+              <span className="block text-2xl font-black tracking-tight text-slate-900">
+                HMS
+              </span>
+              <span className="block text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                Hospital Management System
+              </span>
+            </div>
+          </Link>
 
-          <p className="mt-2 text-sm text-slate-500">
-            Create an account to continue
-          </p>
-        </div>
-
-        {error && (
-          <div className="mb-5 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
-            {error}
+          <div className="mb-8 text-center">
+            <span className="text-xs font-bold uppercase tracking-widest text-teal-600">
+              Get started
+            </span>
+            <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-slate-900">
+              Create your account
+            </h1>
+            <p className="mt-2 text-sm text-slate-500">
+              Register to access hospital services
+            </p>
           </div>
-        )}
+
+          {error && (
+            <div className="mb-5 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700">
+              {error}
+            </div>
+          )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label
                 htmlFor="first_name"
-                className="mb-1.5 block text-sm font-medium text-slate-700"
+                className="mb-1.5 block text-sm font-semibold text-slate-700"
               >
                 First Name
               </label>
@@ -140,7 +161,7 @@ const Register = () => {
                 value={formData.first_name}
                 onChange={handleChange}
                 autoComplete="given-name"
-                className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm outline-none transition placeholder:text-slate-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
                 placeholder="First name"
               />
             </div>
@@ -148,7 +169,7 @@ const Register = () => {
             <div>
               <label
                 htmlFor="last_name"
-                className="mb-1.5 block text-sm font-medium text-slate-700"
+                className="mb-1.5 block text-sm font-semibold text-slate-700"
               >
                 Last Name
               </label>
@@ -160,7 +181,7 @@ const Register = () => {
                 value={formData.last_name}
                 onChange={handleChange}
                 autoComplete="family-name"
-                className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm outline-none transition placeholder:text-slate-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
                 placeholder="Last name"
               />
             </div>
@@ -169,7 +190,7 @@ const Register = () => {
           <div>
             <label
               htmlFor="email"
-              className="mb-1.5 block text-sm font-medium text-slate-700"
+              className="mb-1.5 block text-sm font-semibold text-slate-700"
             >
               Email
             </label>
@@ -181,7 +202,7 @@ const Register = () => {
               value={formData.email}
               onChange={handleChange}
               autoComplete="email"
-              className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+              className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm outline-none transition placeholder:text-slate-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
               placeholder="Enter your email"
             />
           </div>
@@ -189,7 +210,7 @@ const Register = () => {
           <div>
             <label
               htmlFor="username"
-              className="mb-1.5 block text-sm font-medium text-slate-700"
+              className="mb-1.5 block text-sm font-semibold text-slate-700"
             >
               Username
             </label>
@@ -201,7 +222,7 @@ const Register = () => {
               value={formData.username}
               onChange={handleChange}
               autoComplete="username"
-              className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+              className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm outline-none transition placeholder:text-slate-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
               placeholder="Choose a username"
             />
           </div>
@@ -210,7 +231,7 @@ const Register = () => {
             <div>
               <label
                 htmlFor="date_of_birth"
-                className="mb-1.5 block text-sm font-medium text-slate-700"
+                className="mb-1.5 block text-sm font-semibold text-slate-700"
               >
                 Date of Birth
               </label>
@@ -221,14 +242,14 @@ const Register = () => {
                 type="date"
                 value={formData.date_of_birth}
                 onChange={handleChange}
-                className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm outline-none transition placeholder:text-slate-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
               />
             </div>
 
             <div>
               <label
                 htmlFor="gender"
-                className="mb-1.5 block text-sm font-medium text-slate-700"
+                className="mb-1.5 block text-sm font-semibold text-slate-700"
               >
                 Gender
               </label>
@@ -238,7 +259,7 @@ const Register = () => {
                 name="gender"
                 value={formData.gender}
                 onChange={handleChange}
-                className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm outline-none transition placeholder:text-slate-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
               >
                 <option value="">Select gender</option>
                 <option value="Male">Male</option>
@@ -252,7 +273,7 @@ const Register = () => {
             <div>
               <label
                 htmlFor="phone"
-                className="mb-1.5 block text-sm font-medium text-slate-700"
+                className="mb-1.5 block text-sm font-semibold text-slate-700"
               >
                 Phone
               </label>
@@ -264,7 +285,7 @@ const Register = () => {
                 value={formData.phone}
                 onChange={handleChange}
                 autoComplete="tel"
-                className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm outline-none transition placeholder:text-slate-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
                 placeholder="Contact number"
               />
             </div>
@@ -272,7 +293,7 @@ const Register = () => {
             <div>
               <label
                 htmlFor="blood_group"
-                className="mb-1.5 block text-sm font-medium text-slate-700"
+                className="mb-1.5 block text-sm font-semibold text-slate-700"
               >
                 Blood Group
               </label>
@@ -282,7 +303,7 @@ const Register = () => {
                 name="blood_group"
                 value={formData.blood_group}
                 onChange={handleChange}
-                className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm outline-none transition placeholder:text-slate-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
               >
                 <option value="">Select blood group</option>
                 <option value="A+">A+</option>
@@ -300,7 +321,7 @@ const Register = () => {
           <div>
             <label
               htmlFor="emergency_contact"
-              className="mb-1.5 block text-sm font-medium text-slate-700"
+              className="mb-1.5 block text-sm font-semibold text-slate-700"
             >
               Emergency Contact
             </label>
@@ -312,7 +333,7 @@ const Register = () => {
               value={formData.emergency_contact}
               onChange={handleChange}
               autoComplete="tel"
-              className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+              className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm outline-none transition placeholder:text-slate-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
               placeholder="Emergency contact number"
             />
           </div>
@@ -320,7 +341,7 @@ const Register = () => {
           <div>
             <label
               htmlFor="address"
-              className="mb-1.5 block text-sm font-medium text-slate-700"
+              className="mb-1.5 block text-sm font-semibold text-slate-700"
             >
               Address
             </label>
@@ -331,7 +352,7 @@ const Register = () => {
               value={formData.address}
               onChange={handleChange}
               rows="2"
-              className="w-full resize-none rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+              className="w-full resize-none rounded-xl border border-slate-300 px-4 py-2.5 text-sm outline-none transition placeholder:text-slate-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
               placeholder="Enter your address"
             />
           </div>
@@ -339,7 +360,7 @@ const Register = () => {
           <div>
             <label
               htmlFor="password"
-              className="mb-1.5 block text-sm font-medium text-slate-700"
+              className="mb-1.5 block text-sm font-semibold text-slate-700"
             >
               Password
             </label>
@@ -352,7 +373,7 @@ const Register = () => {
                 value={formData.password}
                 onChange={handleChange}
                 autoComplete="new-password"
-                className="w-full rounded-lg border border-slate-300 px-4 py-2.5 pr-10 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                className="w-full rounded-xl border border-slate-300 px-4 py-2.5 pr-10 text-sm outline-none transition placeholder:text-slate-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
                 placeholder="At least 8 characters"
               />
 
@@ -360,7 +381,7 @@ const Register = () => {
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
                 aria-label={showPassword ? "Hide password" : "Show password"}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-indigo-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-teal-600"
               >
                 {showPassword ? (
                   <Eye className="h-4 w-4" />
@@ -374,7 +395,7 @@ const Register = () => {
           <div>
             <label
               htmlFor="confirmPassword"
-              className="mb-1.5 block text-sm font-medium text-slate-700"
+              className="mb-1.5 block text-sm font-semibold text-slate-700"
             >
               Confirm Password
             </label>
@@ -386,7 +407,7 @@ const Register = () => {
               value={formData.confirmPassword}
               onChange={handleChange}
               autoComplete="new-password"
-              className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+              className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm outline-none transition placeholder:text-slate-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
               placeholder="Re-enter your password"
             />
           </div>
@@ -394,7 +415,7 @@ const Register = () => {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full rounded-lg bg-indigo-600 px-4 py-3 font-medium text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-xl bg-teal-600 px-4 py-3 font-semibold text-white shadow-md shadow-teal-600/25 transition hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {submitting ? "Creating account..." : "Register"}
           </button>
@@ -404,11 +425,12 @@ const Register = () => {
           Already have an account?{" "}
           <Link
             to="/login"
-            className="font-medium text-indigo-600 hover:text-indigo-700"
+            className="font-medium text-teal-600 hover:text-teal-700"
           >
             Sign in
           </Link>
         </p>
+        </div>
       </div>
     </div>
   );

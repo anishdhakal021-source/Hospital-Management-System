@@ -2,112 +2,14 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { 
-  Heart, Shield, Phone, Calendar, Clock, MapPin, Mail, 
-  Stethoscope, Activity, FileText, ChevronRight, CheckCircle2, 
+  Shield, Phone, Calendar, Clock, MapPin, Mail, 
+  Stethoscope, FileText, ChevronRight, CheckCircle2, 
   UserPlus, LogIn, Award, Users, Ambulance, 
-  Video, Microchip, Lock, ArrowRight, Menu, X, Star, Send, Info
+  Video, Microchip, Lock, ArrowRight, Menu, X, Send, Info
 } from 'lucide-react';
 
 import { getPublicDepartments } from '../../services/departmentService';
 import { getPublicDoctors } from '../../services/doctorService';
-
-const DEPARTMENTS = [
-  {
-    id: 'cardiology',
-    name: 'Cardiology',
-    icon: Activity,
-    desc: 'Comprehensive heart care, diagnostic ECGs, angioplasty, and preventative cardiovascular health programs.',
-    doctorsCount: 12,
-    color: 'bg-red-50 text-red-600 border-red-200'
-  },
-  {
-    id: 'neurology',
-    name: 'Neurology',
-    icon: Microchip,
-    desc: 'Advanced brain, spine, and nerve disorders treatment with state-of-the-art MRI & EEG diagnostics.',
-    doctorsCount: 8,
-    color: 'bg-purple-50 text-purple-600 border-purple-200'
-  },
-  {
-    id: 'pediatrics',
-    name: 'Pediatrics',
-    icon: Heart,
-    desc: 'Compassionate care for infants, children, and teens with dedicated pediatric ICU and immunizations.',
-    doctorsCount: 10,
-    color: 'bg-pink-50 text-pink-600 border-pink-200'
-  },
-  {
-    id: 'orthopedics',
-    name: 'Orthopedics',
-    icon: Award,
-    desc: 'Bone and joint care, robotic knee replacements, sports injury rehabilitation, and trauma surgery.',
-    doctorsCount: 14,
-    color: 'bg-blue-50 text-blue-600 border-blue-200'
-  },
-  {
-    id: 'emergency',
-    name: 'Emergency Medicine',
-    icon: Ambulance,
-    desc: '24/7 Level 1 trauma response with immediate triaging, resuscitation bays, and emergency surgeons.',
-    doctorsCount: 16,
-    color: 'bg-amber-50 text-amber-600 border-amber-200'
-  },
-  {
-    id: 'telehealth',
-    name: 'Telemedicine',
-    icon: Video,
-    desc: 'HD virtual consultations with top specialists from the comfort of your home with digital prescriptions.',
-    doctorsCount: 20,
-    color: 'bg-teal-50 text-teal-600 border-teal-200'
-  }
-];
-
-const FEATURED_DOCTORS = [
-  {
-    id: 1,
-    name: 'Dr. Sarah Jenkins',
-    role: 'Chief Cardiologist',
-    department: 'Cardiology',
-    experience: '15+ Years',
-    rating: 4.9,
-    reviews: 128,
-    availability: 'Available Today',
-    img: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=400&q=80'
-  },
-  {
-    id: 2,
-    name: 'Dr. Robert Chen',
-    role: 'Senior Neurologist',
-    department: 'Neurology',
-    experience: '12+ Years',
-    rating: 4.8,
-    reviews: 96,
-    availability: 'Next Avail: Tomorrow',
-    img: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=400&q=80'
-  },
-  {
-    id: 3,
-    name: 'Dr. Elena Rostova',
-    role: 'Pediatric Specialist',
-    department: 'Pediatrics',
-    experience: '10+ Years',
-    rating: 5.0,
-    reviews: 210,
-    availability: 'Available Today',
-    img: 'https://images.unsplash.com/photo-1594824813566-7885a3964660?auto=format&fit=crop&w=400&q=80'
-  },
-  {
-    id: 4,
-    name: 'Dr. Marcus Vance',
-    role: 'Orthopedic Surgeon',
-    department: 'Orthopedics',
-    experience: '18+ Years',
-    rating: 4.9,
-    reviews: 154,
-    availability: 'Next Avail: Friday',
-    img: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=400&q=80'
-  }
-];
 
 const CORE_SERVICES = [
   {
@@ -148,39 +50,6 @@ const CORE_SERVICES = [
   }
 ];
 
-const getDepartmentPresentation = (department, index, doctors) => {
-  const fallback = DEPARTMENTS[index % DEPARTMENTS.length];
-  const matchingDepartment = DEPARTMENTS.find(
-    (item) => item.name.toLowerCase() === department.name.toLowerCase()
-  );
-  const presentation = matchingDepartment || fallback;
-
-  return {
-    id: department.id,
-    name: department.name,
-    desc: department.description || presentation.desc,
-    doctorsCount: doctors.filter(
-      (doctor) => doctor.department === department.name
-    ).length,
-    icon: presentation.icon,
-    color: presentation.color
-  };
-};
-
-const getDoctorPresentation = (doctor, index) => {
-  const fallback = FEATURED_DOCTORS[index % FEATURED_DOCTORS.length];
-  const name = doctor.name || `${doctor.first_name || ''} ${doctor.last_name || ''}`.trim();
-
-  return {
-    ...fallback,
-    id: doctor.id,
-    name: name || `Dr. ${doctor.specialization || 'HMS Specialist'}`,
-    role: doctor.specialization || 'HMS Specialist',
-    department: doctor.department_name || 'General Medicine',
-    availability: doctor.is_available ? 'Available Today' : 'Next Avail: On Request'
-  };
-};
-
 export default function Home() {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -191,32 +60,31 @@ export default function Home() {
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [contactSubmitted, setContactSubmitted] = useState(false);
 
-  const { data: apiDepartments = [] } = useQuery({
+  const {
+    data: apiDepartments = [],
+    isLoading: departmentsLoading
+  } = useQuery({
     queryKey: ['public', 'departments'],
     queryFn: getPublicDepartments,
-    staleTime: 60_000
+    staleTime: 0
   });
 
-  const { data: apiDoctors = [] } = useQuery({
+  const {
+    data: apiDoctors = [],
+    isLoading: doctorsLoading
+  } = useQuery({
     queryKey: ['public', 'doctors'],
     queryFn: getPublicDoctors,
-    staleTime: 60_000
+    staleTime: 0
   });
 
-  const doctors = apiDoctors.length
-    ? apiDoctors.map(getDoctorPresentation)
-    : FEATURED_DOCTORS;
-
-  const departments = apiDepartments.length
-    ? apiDepartments.map((department, index) =>
-        getDepartmentPresentation(department, index, doctors)
-      )
-    : DEPARTMENTS;
+  const doctors = apiDoctors;
+  const departments = apiDepartments;
 
   const visibleDoctors =
     selectedDept === 'all'
       ? doctors
-      : doctors.filter((doctor) => doctor.department === selectedDept);
+      : doctors.filter((doctor) => doctor.department_name === selectedDept);
 
   // Form state for Contact Us
   const [contactForm, setContactForm] = useState({
@@ -417,8 +285,12 @@ export default function Home() {
 
               <div className="pt-6 border-t border-slate-200/80 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center lg:text-left">
                 <div>
-                  <h4 className="text-2xl font-bold text-slate-900">50+</h4>
-                  <p className="text-xs text-slate-500 font-medium">Specialist Doctors</p>
+                  <h4 className="text-2xl font-bold text-slate-900">
+                    {apiDoctors.length || '—'}
+                  </h4>
+                  <p className="text-xs text-slate-500 font-medium">
+                    {apiDoctors.length ? 'Available Doctors' : 'Doctors coming soon'}
+                  </p>
                 </div>
                 <div>
                   <h4 className="text-2xl font-bold text-slate-900">9700000000</h4>
@@ -540,42 +412,63 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {departments.map((dept) => {
-              const IconComponent = dept.icon;
-              return (
-                <div 
-                  key={dept.id}
-                  className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm hover:shadow-md transition"
-                >
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className={`p-3 rounded-xl border ${dept.color}`}>
-                      <IconComponent className="w-6 h-6" />
+          {departmentsLoading ? (
+            <div className="rounded-2xl border border-slate-200/80 bg-white p-10 text-center text-slate-500 shadow-sm">
+              Loading departments...
+            </div>
+          ) : departments.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center shadow-sm">
+              <Stethoscope className="mx-auto mb-4 h-10 w-10 text-slate-300" />
+              <h3 className="text-lg font-bold text-slate-800">Departments are currently unavailable</h3>
+              <p className="mx-auto mt-2 max-w-md text-sm text-slate-500">
+                Departments added by the hospital admin will appear here.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {departments.map((dept) => {
+                const specialistsCount = doctors.filter(
+                  (doctor) => doctor.department_name === dept.name
+                ).length;
+
+                return (
+                  <div
+                    key={dept.id}
+                    className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm hover:shadow-md transition"
+                  >
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="p-3 rounded-xl border border-teal-100 bg-teal-50 text-teal-600">
+                        <Stethoscope className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold text-slate-900">{dept.name}</h3>
+                        <span className="text-xs text-slate-500">
+                          {specialistsCount} {specialistsCount === 1 ? 'specialist' : 'specialists'} available
+                        </span>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-lg font-bold text-slate-900">{dept.name}</h3>
-                      <span className="text-xs text-slate-500">{dept.doctorsCount} Specialists On Call</span>
+
+                    {dept.description && (
+                      <p className="text-slate-600 text-sm mb-6 leading-relaxed">
+                        {dept.description}
+                      </p>
+                    )}
+
+                    <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                      <Link
+                        to="/doctors"
+                        state={{ department: dept.name }}
+                        onClick={() => setSelectedDept(dept.name)}
+                        className="text-xs font-bold text-teal-600 hover:text-teal-700 flex items-center gap-1"
+                      >
+                        Find Specialist <ChevronRight className="w-3.5 h-3.5" />
+                      </Link>
                     </div>
                   </div>
-
-                  <p className="text-slate-600 text-sm mb-6 leading-relaxed">
-                    {dept.desc}
-                  </p>
-
-                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                    <Link
-                      to="/doctors"
-                      state={{ department: dept.name }}
-                      onClick={() => setSelectedDept(dept.name)}
-                      className="text-xs font-bold text-teal-600 hover:text-teal-700 flex items-center gap-1"
-                    >
-                      Find Specialist <ChevronRight className="w-3.5 h-3.5" />
-                    </Link>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
 
         </div>
       </section>
@@ -594,51 +487,91 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {visibleDoctors.map((doc) => (
-              <div 
-                key={doc.id}
-                className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group"
-              >
-                <div>
-                  <div className="relative h-60 overflow-hidden bg-slate-100">
-                    <img 
-                      src={doc.img} 
-                      alt={doc.name} 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-full text-xs font-bold text-slate-800 flex items-center gap-1 shadow">
-                      <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                      {doc.rating} ({doc.reviews})
-                    </div>
-                  </div>
+          {doctorsLoading ? (
+            <div className="rounded-2xl border border-slate-200/80 bg-white p-10 text-center text-slate-500 shadow-sm">
+              Loading doctors...
+            </div>
+          ) : visibleDoctors.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center shadow-sm">
+              <Stethoscope className="mx-auto mb-4 h-10 w-10 text-slate-300" />
+              <h3 className="text-lg font-bold text-slate-800">
+                {selectedDept === 'all'
+                  ? 'Doctors are currently unavailable'
+                  : 'No doctors available for this department'}
+              </h3>
+              <p className="mx-auto mt-2 max-w-md text-sm text-slate-500">
+                Doctors added by the hospital admin will appear here.
+              </p>
+              {selectedDept !== 'all' && (
+                <button
+                  onClick={() => setSelectedDept('all')}
+                  className="mt-5 text-sm font-semibold text-teal-600 hover:text-teal-700"
+                >
+                  View all doctors
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {visibleDoctors.map((doc) => {
+                const name = doc.name || 'HMS Specialist';
+                const specialization = doc.specialization || 'Medical Specialist';
+                const department = doc.department_name || 'General Medicine';
+                const availability = doc.is_available
+                  ? 'Available Today'
+                  : 'Currently unavailable';
+                const initials = name
+                  .split(' ')
+                  .filter(Boolean)
+                  .slice(0, 2)
+                  .map((part) => part[0])
+                  .join('')
+                  .toUpperCase();
 
-                  <div className="p-5">
-                    <span className="text-xs font-semibold uppercase tracking-wider text-teal-600">
-                      {doc.department}
-                    </span>
-                    <h3 className="text-lg font-bold text-slate-900 mt-0.5">{doc.name}</h3>
-                    <p className="text-xs text-slate-500 font-medium mb-3">{doc.role} • {doc.experience}</p>
-
-                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-700 text-xs font-medium">
-                      <Clock className="w-3.5 h-3.5" />
-                      {doc.availability}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-5 pt-0">
-                  <button 
-                    onClick={() => handleBookingAttempt(doc)}
-                    className="w-full py-2.5 rounded-lg bg-slate-900 hover:bg-teal-600 text-white font-semibold text-xs transition flex items-center justify-center gap-1.5"
+                return (
+                  <div
+                    key={doc.id}
+                    className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group"
                   >
-                    <Lock className="w-3.5 h-3.5 text-teal-400" />
-                    Book Consultation
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+                    <div>
+                      <div className="relative h-40 overflow-hidden bg-slate-100 flex items-center justify-center">
+                        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-teal-100 text-2xl font-black text-teal-700">
+                          {initials || 'HMS'}
+                        </div>
+                        <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-full text-xs font-bold text-slate-800 flex items-center gap-1 shadow">
+                          <Clock className="w-3.5 h-3.5 text-emerald-600" />
+                          {availability}
+                        </div>
+                      </div>
+
+                      <div className="p-5">
+                        <span className="text-xs font-semibold uppercase tracking-wider text-teal-600">
+                          {department}
+                        </span>
+                        <h3 className="text-lg font-bold text-slate-900 mt-0.5">{name}</h3>
+                        <p className="text-xs text-slate-500 font-medium mb-3">{specialization}</p>
+
+                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-700 text-xs font-medium">
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          {doc.is_available ? 'Accepting appointments' : 'Not accepting appointments'}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-5 pt-0">
+                      <button
+                        onClick={() => handleBookingAttempt(doc)}
+                        className="w-full py-2.5 rounded-lg bg-slate-900 hover:bg-teal-600 text-white font-semibold text-xs transition flex items-center justify-center gap-1.5"
+                      >
+                        <Lock className="w-3.5 h-3.5 text-teal-400" />
+                        Book Consultation
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
 
         </div>
       </section>
@@ -698,8 +631,12 @@ export default function Home() {
                 </div>
                 <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm text-center">
                   <Stethoscope className="w-8 h-8 text-teal-600 mx-auto mb-2" />
-                  <h3 className="text-2xl font-black text-slate-900">50+</h3>
-                  <p className="text-xs text-slate-500 font-medium">Specialist Doctors</p>
+                  <h3 className="text-2xl font-black text-slate-900">
+                    {apiDoctors.length || '—'}
+                  </h3>
+                  <p className="text-xs text-slate-500 font-medium">
+                    {apiDoctors.length ? 'Available Doctors' : 'Doctors coming soon'}
+                  </p>
                 </div>
                 <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm text-center">
                   <Shield className="w-8 h-8 text-teal-600 mx-auto mb-2" />
@@ -856,10 +793,11 @@ export default function Home() {
                         className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-500"
                       >
                         <option>General Inquiry</option>
-                        <option>Cardiology</option>
-                        <option>Neurology</option>
-                        <option>Pediatrics</option>
-                        <option>Orthopedics</option>
+                        {departments.map((department) => (
+                          <option key={department.id} value={department.name}>
+                            {department.name}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </div>
@@ -984,7 +922,7 @@ export default function Home() {
 
             {selectedDoctor ? (
               <p className="text-xs text-slate-600 mb-6 leading-relaxed">
-                You must login to book an appointment or consultation with <strong className="text-slate-900">{selectedDoctor.name}</strong> ({selectedDoctor.department}). Please login to your account or register a new patient account to proceed.
+                You must login to book an appointment or consultation with <strong className="text-slate-900">{selectedDoctor.name}</strong> ({selectedDoctor.department_name || 'the hospital'}). Please login to your account or register a new patient account to proceed.
               </p>
             ) : (
               <p className="text-xs text-slate-600 mb-6 leading-relaxed">
