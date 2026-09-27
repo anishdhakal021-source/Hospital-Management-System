@@ -13,6 +13,7 @@ const CreateAppointment = () => {
   const { user } = useAuth();
 
   const [formData, setFormData] = useState({
+    patient_id: "",
     doctor_id: "",
     appointment_date: "",
     reason: "",
@@ -41,12 +42,10 @@ const CreateAppointment = () => {
   });
 
   /*
-   * Find the patient record belonging to the logged-in user.
+   * Find the patient profile of the logged-in user.
    *
-   * We use username instead of assuming:
-   * patient.id === user.id
-   *
-   * because Patient ID and User ID are separate database IDs.
+   * Patient ID and User ID are different database IDs,
+   * so we match using the username.
    */
   const currentPatient = patients.find(
     (patient) => patient.username === user?.username
@@ -97,11 +96,20 @@ const CreateAppointment = () => {
     event.preventDefault();
     setFormError("");
 
-    // Make sure the patient profile was found
-    if (!currentPatient) {
-      setFormError(
-        "Patient profile not found. Please make sure your patient profile exists."
-      );
+    /*
+     * PATIENT:
+     * They must use their own patient profile.
+     *
+     * ADMIN / RECEPTIONIST / DOCTOR:
+     * They can select a patient from the dropdown.
+     */
+    const selectedPatientId =
+      user?.role === "PATIENT"
+        ? currentPatient?.id
+        : formData.patient_id;
+
+    if (!selectedPatientId) {
+      setFormError("Please select a patient.");
       return;
     }
 
@@ -117,14 +125,8 @@ const CreateAppointment = () => {
       return;
     }
 
-    /*
-     * Send the Patient ID to the backend.
-     *
-     * The backend will still verify whether this patient
-     * is allowed to create the appointment.
-     */
     createMutation.mutate({
-      patient_id: currentPatient.id,
+      patient_id: Number(selectedPatientId),
       doctor_id: Number(formData.doctor_id),
       appointment_date: formData.appointment_date,
       reason: formData.reason,
@@ -182,6 +184,57 @@ const CreateAppointment = () => {
       {/* Form */}
       <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-6">
+
+          {/* Patient */}
+          <div>
+            <label
+              htmlFor="patient_id"
+              className="mb-2 block text-sm font-medium text-gray-700"
+            >
+              Patient
+            </label>
+
+            {user?.role === "PATIENT" ? (
+              <input
+                type="text"
+                value={
+                  currentPatient
+                    ? `${currentPatient.user?.first_name || currentPatient.username} ${
+                        currentPatient.user?.last_name || ""
+                      }`.trim()
+                    : "Patient profile not found"
+                }
+                disabled
+                className="w-full rounded-lg border border-gray-300 bg-gray-100 px-3 py-2.5 text-sm text-gray-600"
+              />
+            ) : (
+              <select
+                id="patient_id"
+                name="patient_id"
+                value={formData.patient_id}
+                onChange={handleChange}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              >
+                <option value="">
+                  Select a patient
+                </option>
+
+                {patients.map((patient) => (
+                  <option
+                    key={patient.id}
+                    value={patient.id}
+                  >
+                    {patient.user?.first_name || patient.username
+                      ? `${patient.user?.first_name || patient.username} ${
+                          patient.user?.last_name || ""
+                        }`.trim()
+                      : `Patient #${patient.id}`}
+                  </option>
+                ))}
+              </select>
+            )}
+          </div>
+
           {/* Doctor */}
           <div>
             <label
@@ -202,21 +255,28 @@ const CreateAppointment = () => {
                 Select a doctor
               </option>
 
-              {doctors.map((doctor) => (
-                <option
-                  key={doctor.id}
-                  value={doctor.id}
-                >
-                  {doctor.user?.first_name || doctor.username
-                    ? `${doctor.user?.first_name || doctor.username} ${
-                        doctor.user?.last_name || ""
-                      }`.trim()
-                    : `Doctor #${doctor.id}`}
-                  {doctor.specialization
-                    ? ` - ${doctor.specialization}`
-                    : ""}
-                </option>
-              ))}
+              {doctors.map((doctor) => {
+                const firstName =
+                  doctor.user?.first_name || doctor.username;
+
+                const lastName =
+                  doctor.user?.last_name || "";
+
+                const doctorName =
+                  `${firstName} ${lastName}`.trim();
+
+                return (
+                  <option
+                    key={doctor.id}
+                    value={doctor.id}
+                  >
+                    {doctorName || `Doctor #${doctor.id}`}
+                    {doctor.specialization
+                      ? ` - ${doctor.specialization}`
+                      : ""}
+                  </option>
+                );
+              })}
             </select>
           </div>
 
@@ -282,7 +342,7 @@ const CreateAppointment = () => {
               type="submit"
               disabled={
                 createMutation.isPending ||
-                !currentPatient
+                (user?.role === "PATIENT" && !currentPatient)
               }
               className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
