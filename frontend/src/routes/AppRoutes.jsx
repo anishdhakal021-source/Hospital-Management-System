@@ -34,6 +34,8 @@ import CreateMedicine from "../pages/Medicine/CreateMedicine";
 import EditMedicine from "../pages/Medicine/EditMedicine";
 import MedicineBatches from "../pages/Medicine/MedicineBatches";
 import CreateMedicineBatch from "../pages/Medicine/CreateMedicineBatch";
+import Users from "../pages/Users/Users";
+import UserRegistration from "../pages/Users/UserRegistration";
 
 const SectionEntry = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -76,6 +78,10 @@ const AppRoutes = () => {
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          
+          <Route path="/users" element={<Users />} />
+          <Route path="/users/new" element={<UserRegistration />} />
+
 
           <Route path="/patients" element={<Patients />} />
           <Route path="/patients/new" element={<CreatePatient />} />

@@ -23,6 +23,7 @@ import { useAuth } from "../context/AuthContext";
 const navigationByRole = {
   ADMIN: [
     { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
+    { label: "Users", path: "/users", icon: Users },
     { label: "Patients", path: "/patients", icon: Users },
     { label: "Doctors", path: "/doctors", icon: Stethoscope },
     { label: "Departments", path: "/departments", icon: Building2 },
