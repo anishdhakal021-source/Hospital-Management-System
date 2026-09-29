@@ -96,7 +96,8 @@ export default function Home() {
   });
 
   useEffect(() => {
-    const sectionId = location.pathname.slice(1);
+    const hashId = location.hash ? location.hash.slice(1) : '';
+    const sectionId = hashId || location.pathname.slice(1);
     const section = sectionId ? document.getElementById(sectionId) : null;
 
     if (section) {
@@ -104,7 +105,7 @@ export default function Home() {
     } else {
       window.scrollTo({ top: 0, behavior: 'auto' });
     }
-  }, [location.pathname]);
+  }, [location.pathname, location.hash]);
 
   const handleContactSubmit = (e) => {
     e.preventDefault();
@@ -171,11 +172,11 @@ export default function Home() {
 
             {/* Navigation Links */}
             <div className="hidden lg:flex items-center gap-8 font-semibold text-slate-600 text-sm">
-              <Link to="/services" className="hover:text-teal-600 transition">Services</Link>
-              <Link to="/doctors" className="hover:text-teal-600 transition">Doctors</Link>
-              <Link to="/departments" className="hover:text-teal-600 transition">Departments</Link>
-              <Link to="/about" className="hover:text-teal-600 transition">About Us</Link>
-              <Link to="/contact" className="hover:text-teal-600 transition">Contact Us</Link>
+              <a href="/#services" className="hover:text-teal-600 transition">Services</a>
+              <a href="/#doctors" className="hover:text-teal-600 transition">Doctors</a>
+              <a href="/#departments" className="hover:text-teal-600 transition">Departments</a>
+              <a href="/#about" className="hover:text-teal-600 transition">About Us</a>
+              <a href="/#contact" className="hover:text-teal-600 transition">Contact Us</a>
             </div>
 
             {/* Direct Link Action Buttons: Login & Register */}
@@ -213,11 +214,11 @@ export default function Home() {
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
           <div className="sm:hidden border-b border-slate-200 bg-white px-4 pt-2 pb-6 space-y-3">
-            <Link to="/services" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-slate-700 font-medium border-b border-slate-100">Services</Link>
-            <Link to="/doctors" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-slate-700 font-medium border-b border-slate-100">Doctors</Link>
-            <Link to="/departments" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-slate-700 font-medium border-b border-slate-100">Departments</Link>
-            <Link to="/about" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-slate-700 font-medium border-b border-slate-100">About Us</Link>
-            <Link to="/contact" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-slate-700 font-medium border-b border-slate-100">Contact Us</Link>
+            <a href="/#services" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-slate-700 font-medium border-b border-slate-100">Services</a>
+            <a href="/#doctors" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-slate-700 font-medium border-b border-slate-100">Doctors</a>
+            <a href="/#departments" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-slate-700 font-medium border-b border-slate-100">Departments</a>
+            <a href="/#about" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-slate-700 font-medium border-b border-slate-100">About Us</a>
+            <a href="/#contact" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-slate-700 font-medium border-b border-slate-100">Contact Us</a>
             
             <div className="pt-2 flex flex-col gap-2">
               <Link
@@ -384,9 +385,9 @@ export default function Home() {
                       Book Appointment <Lock className="w-3.5 h-3.5" />
                     </button>
                   ) : (
-                    <Link to="/contact" className="inline-flex items-center gap-2 text-sm font-semibold text-teal-600 hover:text-teal-700">
+                    <a href="/#contact" className="inline-flex items-center gap-2 text-sm font-semibold text-teal-600 hover:text-teal-700">
                       Learn More <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </Link>
+                    </a>
                   )}
                 </div>
               );
@@ -455,14 +456,13 @@ export default function Home() {
                     )}
 
                     <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                      <Link
-                        to="/doctors"
-                        state={{ department: dept.name }}
+                      <a
+                        href="/#doctors"
                         onClick={() => setSelectedDept(dept.name)}
                         className="text-xs font-bold text-teal-600 hover:text-teal-700 flex items-center gap-1"
                       >
                         Find Specialist <ChevronRight className="w-3.5 h-3.5" />
-                      </Link>
+                      </a>
                     </div>
                   </div>
                 );
@@ -859,11 +859,11 @@ export default function Home() {
             <div>
               <h4 className="text-slate-200 font-bold text-sm mb-3">Quick Links</h4>
               <ul className="space-y-2">
-                <li><Link to="/services" className="hover:text-teal-400 transition">Services</Link></li>
-                <li><Link to="/doctors" className="hover:text-teal-400 transition">Doctors</Link></li>
-                <li><Link to="/departments" className="hover:text-teal-400 transition">Departments</Link></li>
-                <li><Link to="/about" className="hover:text-teal-400 transition">About Us</Link></li>
-                <li><Link to="/contact" className="hover:text-teal-400 transition">Contact Us</Link></li>
+            <li><a href="/#services" className="hover:text-teal-400 transition">Services</a></li>
+            <li><a href="/#doctors" className="hover:text-teal-400 transition">Doctors</a></li>
+            <li><a href="/#departments" className="hover:text-teal-400 transition">Departments</a></li>
+            <li><a href="/#about" className="hover:text-teal-400 transition">About Us</a></li>
+            <li><a href="/#contact" className="hover:text-teal-400 transition">Contact Us</a></li>
               </ul>
             </div>
 

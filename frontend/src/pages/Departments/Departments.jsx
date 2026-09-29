@@ -52,18 +52,20 @@ const Departments = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <div className="flex items-center gap-2">
-            <Building2 className="h-6 w-6 text-blue-600" />
-
-            <h1 className="text-2xl font-bold text-gray-900">
-              Departments
-            </h1>
+        <div className="flex items-center gap-3">
+          <div className="rounded-lg bg-emerald-50 p-2">
+            <Building2 className="h-6 w-6 text-emerald-600" />
           </div>
 
-          <p className="mt-1 text-sm text-gray-500">
-            Manage hospital departments.
-          </p>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">
+              Departments
+            </h1>
+
+            <p className="text-sm text-slate-500">
+              Manage hospital departments.
+            </p>
+          </div>
         </div>
 
         <div className="flex gap-2">
@@ -71,7 +73,7 @@ const Departments = () => {
             type="button"
             onClick={() => refetch()}
             disabled={isFetching}
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <RefreshCw
               className={`h-4 w-4 ${
@@ -96,8 +98,8 @@ const Departments = () => {
 
       {/* Loading */}
       {isLoading && (
-        <div className="rounded-xl border border-gray-200 bg-white p-8 text-center">
-          <p className="text-sm text-gray-500">
+        <div className="rounded-xl border border-slate-200 bg-white p-8 text-center">
+          <p className="text-sm text-slate-500">
             Loading departments...
           </p>
         </div>
@@ -134,14 +136,14 @@ const Departments = () => {
 
       {/* Empty */}
       {!isLoading && !isError && departments.length === 0 && (
-        <div className="rounded-xl border border-gray-200 bg-white p-10 text-center">
-          <Building2 className="mx-auto h-10 w-10 text-gray-400" />
+        <div className="rounded-xl border border-slate-200 bg-white p-10 text-center">
+          <Building2 className="mx-auto h-10 w-10 text-slate-400" />
 
-          <h2 className="mt-3 font-semibold text-gray-900">
+          <h2 className="mt-3 font-semibold text-slate-900">
             No departments found
           </h2>
 
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-slate-500">
             There are currently no departments in the system.
           </p>
         </div>
@@ -149,41 +151,41 @@ const Departments = () => {
 
       {/* Desktop table */}
       {!isLoading && !isError && departments.length > 0 && (
-        <div className="hidden overflow-hidden rounded-xl border border-gray-200 bg-white md:block">
+        <div className="hidden overflow-hidden rounded-xl border border-slate-200 bg-white md:block">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-slate-200">
+              <thead className="bg-slate-50">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Department
                   </th>
 
-                  <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Description
                   </th>
 
-                  <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Status
                   </th>
 
                   {canManageDepartments && (
-                    <th className="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    <th className="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">
                       Actions
                     </th>
                   )}
                 </tr>
               </thead>
 
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-slate-200">
                 {departments.map((department) => (
-                  <tr key={department.id} className="hover:bg-gray-50">
+                  <tr key={department.id} className="hover:bg-slate-50">
                     <td className="px-6 py-4">
-                      <div className="font-medium text-gray-900">
+                      <div className="font-medium text-slate-900">
                         {department.name}
                       </div>
                     </td>
 
-                    <td className="max-w-md px-6 py-4 text-sm text-gray-600">
+                    <td className="max-w-md px-6 py-4 text-sm text-slate-600">
                       {department.description || "—"}
                     </td>
 
@@ -192,7 +194,7 @@ const Departments = () => {
                         className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${
                           department.is_active
                             ? "bg-green-100 text-green-700"
-                            : "bg-gray-100 text-gray-600"
+                            : "bg-slate-100 text-slate-600"
                         }`}
                       >
                         {department.is_active
@@ -209,7 +211,7 @@ const Departments = () => {
                             onClick={() =>
                               navigate(`/departments/${department.id}/edit`)
                             }
-                            className="text-sm font-medium text-blue-600 hover:text-blue-800"
+                            className="text-sm font-medium text-emerald-600 hover:text-emerald-800"
                           >
                             Edit
                           </button>
@@ -239,15 +241,15 @@ const Departments = () => {
           {departments.map((department) => (
             <div
               key={department.id}
-              className="rounded-xl border border-gray-200 bg-white p-4"
+              className="rounded-xl border border-slate-200 bg-white p-4"
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <h2 className="font-semibold text-gray-900">
+                  <h2 className="font-semibold text-slate-900">
                     {department.name}
                   </h2>
 
-                  <p className="mt-1 text-sm text-gray-500">
+                  <p className="mt-1 text-sm text-slate-500">
                     {department.description || "No description"}
                   </p>
                 </div>
@@ -256,7 +258,7 @@ const Departments = () => {
                   className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium ${
                     department.is_active
                       ? "bg-green-100 text-green-700"
-                      : "bg-gray-100 text-gray-600"
+                      : "bg-slate-100 text-slate-600"
                   }`}
                 >
                   {department.is_active ? "Active" : "Inactive"}
@@ -270,7 +272,7 @@ const Departments = () => {
                     onClick={() =>
                       navigate(`/departments/${department.id}/edit`)
                     }
-                    className="text-sm font-medium text-blue-600 hover:text-blue-800"
+                    className="text-sm font-medium text-emerald-600 hover:text-emerald-800"
                   >
                     Edit
                   </button>

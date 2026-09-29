@@ -137,7 +137,7 @@ const EditDoctor = () => {
   if (doctorLoading || departmentsLoading || !formData) {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
-        <p className="text-gray-600">Loading doctor...</p>
+        <p className="text-slate-600">Loading doctor...</p>
       </div>
     );
   }
@@ -165,11 +165,11 @@ const EditDoctor = () => {
       {/* Header */}
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-slate-900">
             Edit Doctor
           </h1>
 
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-slate-500">
             Update doctor profile information.
           </p>
         </div>
@@ -177,7 +177,7 @@ const EditDoctor = () => {
         <button
           type="button"
           onClick={() => navigate("/doctors")}
-          className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+          className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
         >
           <ArrowLeft className="h-4 w-4" />
           Back
@@ -187,17 +187,17 @@ const EditDoctor = () => {
       {/* Form */}
       <form
         onSubmit={handleSubmit}
-        className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
+        className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
       >
         {/* Read-only user information */}
-        <div className="mb-6 rounded-lg bg-gray-50 p-4">
-          <h2 className="mb-3 text-sm font-semibold text-gray-700">
+        <div className="mb-6 rounded-lg bg-slate-50 p-4">
+          <h2 className="mb-3 text-sm font-semibold text-slate-700">
             Doctor Account
           </h2>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
+              <label className="mb-1 block text-sm font-medium text-slate-700">
                 Username
               </label>
 
@@ -205,12 +205,12 @@ const EditDoctor = () => {
                 type="text"
                 value={doctor.username || ""}
                 disabled
-                className="w-full rounded-lg border border-gray-300 bg-gray-100 px-3 py-2 text-sm text-gray-600"
+                className="w-full rounded-lg border border-slate-300 bg-slate-100 px-3 py-2 text-sm text-slate-600"
               />
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
+              <label className="mb-1 block text-sm font-medium text-slate-700">
                 Email
               </label>
 
@@ -218,12 +218,12 @@ const EditDoctor = () => {
                 type="email"
                 value={doctor.email || ""}
                 disabled
-                className="w-full rounded-lg border border-gray-300 bg-gray-100 px-3 py-2 text-sm text-gray-600"
+                className="w-full rounded-lg border border-slate-300 bg-slate-100 px-3 py-2 text-sm text-slate-600"
               />
             </div>
           </div>
 
-          <p className="mt-3 text-xs text-gray-500">
+          <p className="mt-3 text-xs text-slate-500">
             Account information cannot be changed from this page.
           </p>
         </div>
@@ -234,7 +234,7 @@ const EditDoctor = () => {
           <div>
             <label
               htmlFor="department_id"
-              className="mb-1 block text-sm font-medium text-gray-700"
+              className="mb-1 block text-sm font-medium text-slate-700"
             >
               Department
             </label>
@@ -244,7 +244,7 @@ const EditDoctor = () => {
               name="department_id"
               value={formData.department_id || ""}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none"
             >
               <option value="">Select department</option>
 
@@ -263,7 +263,7 @@ const EditDoctor = () => {
           <div>
             <label
               htmlFor="specialization"
-              className="mb-1 block text-sm font-medium text-gray-700"
+              className="mb-1 block text-sm font-medium text-slate-700"
             >
               Specialization
             </label>
@@ -274,7 +274,7 @@ const EditDoctor = () => {
               type="text"
               value={formData.specialization}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none"
             />
           </div>
 
@@ -282,7 +282,7 @@ const EditDoctor = () => {
           <div>
             <label
               htmlFor="license_number"
-              className="mb-1 block text-sm font-medium text-gray-700"
+              className="mb-1 block text-sm font-medium text-slate-700"
             >
               License Number
             </label>
@@ -293,7 +293,7 @@ const EditDoctor = () => {
               type="text"
               value={formData.license_number}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none"
             />
           </div>
 
@@ -301,7 +301,7 @@ const EditDoctor = () => {
           <div>
             <label
               htmlFor="phone"
-              className="mb-1 block text-sm font-medium text-gray-700"
+              className="mb-1 block text-sm font-medium text-slate-700"
             >
               Phone
             </label>
@@ -312,7 +312,7 @@ const EditDoctor = () => {
               type="text"
               value={formData.phone}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none"
             />
           </div>
 
@@ -320,7 +320,7 @@ const EditDoctor = () => {
           <div>
             <label
               htmlFor="consultation_fee"
-              className="mb-1 block text-sm font-medium text-gray-700"
+              className="mb-1 block text-sm font-medium text-slate-700"
             >
               Consultation Fee
             </label>
@@ -333,7 +333,7 @@ const EditDoctor = () => {
               min="0"
               value={formData.consultation_fee}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none"
             />
           </div>
 
@@ -345,12 +345,12 @@ const EditDoctor = () => {
               type="checkbox"
               checked={formData.is_available}
               onChange={handleChange}
-              className="h-4 w-4 rounded border-gray-300"
+              className="h-4 w-4 rounded border-slate-300"
             />
 
             <label
               htmlFor="is_available"
-              className="text-sm font-medium text-gray-700"
+              className="text-sm font-medium text-slate-700"
             >
               Doctor is available
             </label>
@@ -369,7 +369,7 @@ const EditDoctor = () => {
           <button
             type="button"
             onClick={() => navigate("/doctors")}
-            className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
           >
             Cancel
           </button>

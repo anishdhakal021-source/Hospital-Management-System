@@ -28,14 +28,20 @@ const MedicalRecords = () => {
     <div className="space-y-6">
       {/* Page header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            Medical Records
-          </h1>
+        <div className="flex items-center gap-3">
+          <div className="rounded-lg bg-emerald-50 p-2">
+            <FileText className="h-6 w-6 text-emerald-600" />
+          </div>
 
-          <p className="mt-1 text-sm text-gray-500">
-            View and manage patient medical records.
-          </p>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">
+              Medical Records
+            </h1>
+
+            <p className="text-sm text-slate-500">
+              View and manage patient medical records.
+            </p>
+          </div>
         </div>
 
 
@@ -44,7 +50,7 @@ const MedicalRecords = () => {
             <button
               type="button"
               onClick={() => navigate("/medical-records/new")}
-              className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
+              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
             >
               Create Record
             </button>
@@ -54,7 +60,7 @@ const MedicalRecords = () => {
             type="button"
             onClick={() => refetch()}
             disabled={isFetching}
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
           >
             <RefreshCw
               size={17}
@@ -68,13 +74,13 @@ const MedicalRecords = () => {
 
       {/* Loading state */}
       {isLoading && (
-        <div className="rounded-xl border border-gray-200 bg-white p-8 text-center">
+        <div className="rounded-xl border border-slate-200 bg-white p-8 text-center">
           <RefreshCw
             size={28}
-            className="mx-auto animate-spin text-gray-400"
+            className="mx-auto animate-spin text-slate-400"
           />
 
-          <p className="mt-3 text-sm text-gray-500">
+          <p className="mt-3 text-sm text-slate-500">
             Loading medical records...
           </p>
         </div>
@@ -104,17 +110,17 @@ const MedicalRecords = () => {
 
       {/* Empty state */}
       {!isLoading && !isError && records.length === 0 && (
-        <div className="rounded-xl border border-gray-200 bg-white p-10 text-center">
+        <div className="rounded-xl border border-slate-200 bg-white p-10 text-center">
           <FileText
             size={40}
-            className="mx-auto text-gray-400"
+            className="mx-auto text-slate-400"
           />
 
-          <h2 className="mt-4 text-lg font-semibold text-gray-900">
+          <h2 className="mt-4 text-lg font-semibold text-slate-900">
             No medical records
           </h2>
 
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-slate-500">
             There are no medical records available.
           </p>
         </div>
@@ -122,49 +128,49 @@ const MedicalRecords = () => {
 
       {/* Records table */}
       {!isLoading && !isError && records.length > 0 && (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-slate-200">
+              <thead className="bg-slate-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Patient
                   </th>
 
-                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Doctor
                   </th>
 
-                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Diagnosis
                   </th>
 
-                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Date
                   </th>
                 </tr>
               </thead>
 
-              <tbody className="divide-y divide-gray-200 bg-white">
+              <tbody className="divide-y divide-slate-200 bg-white">
                 {records.map((record) => (
                   <tr
                     key={record.id}
                     onClick={()=> navigate(`/medical-records/${record.id}`)}
-                    className="cursor-pointer hover:bg-gray-50"
+                    className="cursor-pointer hover:bg-slate-50"
                   >
-                    <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">
+                    <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-slate-900">
                       {record.patient_name || `Patient #${record.patient_id}`}
                     </td>
 
-                    <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
+                    <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-600">
                       {record.doctor_name || `Doctor #${record.doctor_id}`}
                     </td>
 
-                    <td className="max-w-xs truncate px-6 py-4 text-sm text-gray-600">
+                    <td className="max-w-xs truncate px-6 py-4 text-sm text-slate-600">
                       {record.diagnosis}
                     </td>
 
-                    <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
+                    <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-600">
                       {record.created_at
                         ? new Date(record.created_at).toLocaleDateString()
                         : "-"}

@@ -64,13 +64,13 @@ const MedicalRecordDetails = () => {
 
   if (isLoading) {
     return (
-      <div className="rounded-xl border border-gray-200 bg-white p-10 text-center">
+      <div className="rounded-xl border border-slate-200 bg-white p-10 text-center">
         <RefreshCw
           size={30}
-          className="mx-auto animate-spin text-gray-400"
+          className="mx-auto animate-spin text-slate-400"
         />
 
-        <p className="mt-3 text-sm text-gray-500">
+        <p className="mt-3 text-sm text-slate-500">
           Loading medical record...
         </p>
       </div>
@@ -110,7 +110,7 @@ const MedicalRecordDetails = () => {
               <button
                 type="button"
                 onClick={() => navigate("/medical-records")}
-                className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
               >
                 Back
               </button>
@@ -141,18 +141,18 @@ const MedicalRecordDetails = () => {
           <button
             type="button"
             onClick={() => navigate("/medical-records")}
-            className="rounded-lg border border-gray-300 bg-white p-2 text-gray-600 hover:bg-gray-50"
+            className="rounded-lg border border-slate-300 bg-white p-2 text-slate-600 hover:bg-slate-50"
             aria-label="Back to medical records"
           >
             <ArrowLeft size={20} />
           </button>
 
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className="text-2xl font-bold text-slate-900">
               Medical Record
             </h1>
 
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-slate-500">
               Record #{record.id}
             </p>
           </div>
@@ -183,32 +183,32 @@ const MedicalRecordDetails = () => {
 
       {/* Patient and Doctor */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <div className="rounded-xl border border-gray-200 bg-white p-6">
+        <div className="rounded-xl border border-slate-200 bg-white p-6">
           <div className="flex items-center gap-3">
-            <div className="rounded-lg bg-gray-100 p-2">
-              <User size={20} className="text-gray-600" />
+            <div className="rounded-lg bg-slate-100 p-2">
+              <User size={20} className="text-slate-600" />
             </div>
 
             <div>
-              <p className="text-sm text-gray-500">Patient</p>
+              <p className="text-sm text-slate-500">Patient</p>
 
-              <p className="font-semibold text-gray-900">
+              <p className="font-semibold text-slate-900">
                 {record.patient_name || `Patient #${record.patient_id}`}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="rounded-xl border border-gray-200 bg-white p-6">
+        <div className="rounded-xl border border-slate-200 bg-white p-6">
           <div className="flex items-center gap-3">
-            <div className="rounded-lg bg-gray-100 p-2">
-              <Stethoscope size={20} className="text-gray-600" />
+            <div className="rounded-lg bg-slate-100 p-2">
+              <Stethoscope size={20} className="text-slate-600" />
             </div>
 
             <div>
-              <p className="text-sm text-gray-500">Doctor</p>
+              <p className="text-sm text-slate-500">Doctor</p>
 
-              <p className="font-semibold text-gray-900">
+              <p className="font-semibold text-slate-900">
                 {record.doctor_name || `Doctor #${record.doctor_id}`}
               </p>
             </div>
@@ -217,69 +217,69 @@ const MedicalRecordDetails = () => {
       </div>
 
       {/* Diagnosis */}
-      <div className="rounded-xl border border-gray-200 bg-white p-6">
+      <div className="rounded-xl border border-slate-200 bg-white p-6">
         <div className="flex items-center gap-3">
-          <FileText size={20} className="text-gray-600" />
+          <FileText size={20} className="text-slate-600" />
 
-          <h2 className="text-lg font-semibold text-gray-900">
+          <h2 className="text-lg font-semibold text-slate-900">
             Diagnosis
           </h2>
         </div>
 
-        <p className="mt-4 text-gray-700">
+        <p className="mt-4 text-slate-700">
           {record.diagnosis || "-"}
         </p>
       </div>
 
       {/* Symptoms */}
-      <div className="rounded-xl border border-gray-200 bg-white p-6">
-        <h2 className="text-lg font-semibold text-gray-900">
+      <div className="rounded-xl border border-slate-200 bg-white p-6">
+        <h2 className="text-lg font-semibold text-slate-900">
           Symptoms
         </h2>
 
-        <p className="mt-3 whitespace-pre-wrap text-gray-700">
+        <p className="mt-3 whitespace-pre-wrap text-slate-700">
           {record.symptoms || "-"}
         </p>
       </div>
 
       {/* Notes */}
-      <div className="rounded-xl border border-gray-200 bg-white p-6">
-        <h2 className="text-lg font-semibold text-gray-900">
+      <div className="rounded-xl border border-slate-200 bg-white p-6">
+        <h2 className="text-lg font-semibold text-slate-900">
           Notes
         </h2>
 
-        <p className="mt-3 whitespace-pre-wrap text-gray-700">
+        <p className="mt-3 whitespace-pre-wrap text-slate-700">
           {record.notes || "-"}
         </p>
       </div>
 
       {/* Dates */}
-      <div className="rounded-xl border border-gray-200 bg-white p-6">
+      <div className="rounded-xl border border-slate-200 bg-white p-6">
         <div className="flex items-center gap-3">
-          <CalendarDays size={20} className="text-gray-600" />
+          <CalendarDays size={20} className="text-slate-600" />
 
-          <h2 className="text-lg font-semibold text-gray-900">
+          <h2 className="text-lg font-semibold text-slate-900">
             Record Information
           </h2>
         </div>
 
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-slate-500">
               Created
             </p>
 
-            <p className="mt-1 text-sm font-medium text-gray-900">
+            <p className="mt-1 text-sm font-medium text-slate-900">
               {formatDate(record.created_at)}
             </p>
           </div>
 
           <div>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-slate-500">
               Last Updated
             </p>
 
-            <p className="mt-1 text-sm font-medium text-gray-900">
+            <p className="mt-1 text-sm font-medium text-slate-900">
               {formatDate(record.updated_at)}
             </p>
           </div>

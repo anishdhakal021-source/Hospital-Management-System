@@ -1,41 +1,87 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { UserPlus, ArrowLeft, Loader2 } from "lucide-react";
-import { useMutation } from "@tanstack/react-query";
+import { useNavigate, useParams } from "react-router-dom";
+import { ArrowLeft, Loader2, Save } from "lucide-react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
-import { createUser } from "../../services/userService";
+import { getUser, updateUser } from "../../services/userService";
 
-const UserRegistration = () => {
+const emptyForm = {
+  first_name: "",
+  last_name: "",
+  username: "",
+  email: "",
+  role: "PATIENT",
+  password: "",
+};
+
+const EditUser = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    first_name: "",
-    last_name: "",
-    password: "",
-    role: "PATIENT",
-  });
-
+  const [formData, setFormData] = useState(emptyForm);
   const [errorMessage, setErrorMessage] = useState("");
 
+  // Get the user from the backend.
+  const {
+    data: user,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["user", id],
+    queryFn: () => getUser(id),
+  });
+
+  /*
+   * Seed the form while rendering, once the user is loaded.
+   * Adjusting state during render avoids an extra render pass.
+   */
+  const [isSeeded, setIsSeeded] = useState(false);
+
+  if (user && !isSeeded) {
+    setIsSeeded(true);
+
+    setFormData({
+      first_name: user.first_name || "",
+      last_name: user.last_name || "",
+      username: user.username || "",
+      email: user.email || "",
+      role: user.role || "PATIENT",
+      password: "",
+    });
+  }
+
   const mutation = useMutation({
-    mutationFn: createUser,
+    mutationFn: (data) => updateUser(id, data),
 
     onSuccess: () => {
       navigate("/users");
     },
 
-    onError: (error) => {
-      const data = error?.response?.data;
+    onError: (mutationError) => {
+      const data = mutationError?.response?.data;
 
       if (typeof data === "string") {
         setErrorMessage(data);
-      } else if (data?.detail) {
-        setErrorMessage(data.detail);
-      } else {
-        setErrorMessage("Unable to create user. Please check the form.");
+        return;
       }
+
+      if (data && typeof data === "object") {
+        const messages = Object.entries(data)
+          .flatMap(([field, value]) => {
+            const values = Array.isArray(value) ? value : [value];
+
+            return values.map((message) => `${field}: ${message}`);
+          })
+          .join("\n");
+
+        setErrorMessage(
+          messages || "Unable to update user. Please try again."
+        );
+        return;
+      }
+
+      setErrorMessage("Unable to update user. Please try again.");
     },
   });
 
@@ -58,7 +104,20 @@ const UserRegistration = () => {
 
     setErrorMessage("");
 
-    mutation.mutate(formData);
+    // An empty password field keeps the current password.
+    const payload = {
+      first_name: formData.first_name,
+      last_name: formData.last_name,
+      username: formData.username,
+      email: formData.email,
+      role: formData.role,
+    };
+
+    if (formData.password) {
+      payload.password = formData.password;
+    }
+
+    mutation.mutate(payload);
   };
 
   const roles = [
@@ -70,17 +129,54 @@ const UserRegistration = () => {
     { label: "Patient", value: "PATIENT" },
   ];
 
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="flex min-h-[300px] items-center justify-center">
+        <div className="flex items-center gap-2 text-slate-600">
+          <Loader2 className="h-5 w-5 animate-spin" />
+          Loading user...
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (isError) {
+    return (
+      <div className="rounded-xl border border-red-200 bg-red-50 p-6">
+        <h2 className="text-lg font-semibold text-red-700">
+          Unable to load user
+        </h2>
+
+        <p className="mt-2 text-sm text-red-600">
+          {error?.response?.data?.detail ||
+            "Something went wrong while loading the user."}
+        </p>
+
+        <button
+          type="button"
+          onClick={() => navigate("/users")}
+          className="mt-4 inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+        >
+          <ArrowLeft size={16} />
+          Back to Users
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       {/* Page header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">
-            Register User
+          <h1 className="text-2xl font-bold text-slate-800">
+            Edit User
           </h1>
 
           <p className="mt-1 text-sm text-slate-500">
-            Create a new account for the hospital management system.
+            Update the account details of @{user?.username}.
           </p>
         </div>
 
@@ -94,11 +190,11 @@ const UserRegistration = () => {
         </button>
       </div>
 
-      {/* Registration form */}
+      {/* Form */}
       <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
         <div className="mb-6 flex items-center gap-3">
-          <div className="rounded-lg bg-blue-50 p-3">
-            <UserPlus className="text-blue-600" size={22} />
+          <div className="rounded-lg bg-slate-100 p-3">
+            <Save className="text-slate-700" size={22} />
           </div>
 
           <div>
@@ -107,14 +203,14 @@ const UserRegistration = () => {
             </h2>
 
             <p className="text-sm text-slate-500">
-              Enter the user's account details.
+              Update the user's account details.
             </p>
           </div>
         </div>
 
         {/* Backend error */}
         {errorMessage && (
-          <div className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <div className="mb-6 whitespace-pre-line rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
             {errorMessage}
           </div>
         )}
@@ -136,6 +232,7 @@ const UserRegistration = () => {
                 type="text"
                 value={formData.first_name}
                 onChange={handleChange}
+                disabled={mutation.isPending}
                 placeholder="Enter first name"
                 className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
               />
@@ -155,6 +252,7 @@ const UserRegistration = () => {
                 type="text"
                 value={formData.last_name}
                 onChange={handleChange}
+                disabled={mutation.isPending}
                 placeholder="Enter last name"
                 className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
               />
@@ -177,6 +275,7 @@ const UserRegistration = () => {
                 type="text"
                 value={formData.username}
                 onChange={handleChange}
+                disabled={mutation.isPending}
                 placeholder="Enter username"
                 required
                 className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
@@ -197,6 +296,7 @@ const UserRegistration = () => {
                 type="email"
                 value={formData.email}
                 onChange={handleChange}
+                disabled={mutation.isPending}
                 placeholder="Enter email"
                 required
                 className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
@@ -211,7 +311,7 @@ const UserRegistration = () => {
                 htmlFor="password"
                 className="mb-2 block text-sm font-medium text-slate-700"
               >
-                Password
+                New Password
               </label>
 
               <input
@@ -220,14 +320,15 @@ const UserRegistration = () => {
                 type="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Enter password"
-                required
+                disabled={mutation.isPending}
+                placeholder="Leave blank to keep current password"
                 minLength={8}
                 className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
               />
 
-              <p className="mt-1 text-xs text-blue-600">
-                Password should contain at least 8 characters.
+              <p className="mt-1 text-xs text-slate-500">
+                Leave blank to keep the current password. Otherwise at
+                least 8 characters.
               </p>
             </div>
 
@@ -244,6 +345,7 @@ const UserRegistration = () => {
                 name="role"
                 value={formData.role}
                 onChange={handleChange}
+                disabled={mutation.isPending}
                 required
                 className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
               >
@@ -275,12 +377,12 @@ const UserRegistration = () => {
               {mutation.isPending ? (
                 <>
                   <Loader2 size={16} className="animate-spin" />
-                  Creating...
+                  Saving...
                 </>
               ) : (
                 <>
-                  <UserPlus size={16} />
-                  Create User
+                  <Save size={16} />
+                  Save Changes
                 </>
               )}
             </button>
@@ -291,4 +393,4 @@ const UserRegistration = () => {
   );
 };
 
-export default UserRegistration;
+export default EditUser;

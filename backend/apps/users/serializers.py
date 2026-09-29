@@ -8,7 +8,7 @@ from .models import User
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         write_only=True,
-        required=True,
+        required=False,
         min_length=8,
     )
 
@@ -25,6 +25,16 @@ class UserSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ["id"]
 
+    def validate(self, attrs):
+        # A password is mandatory when creating a user,
+        # but optional when updating one.
+        if self.instance is None and not attrs.get("password"):
+            raise serializers.ValidationError(
+                {"password": "This field is required."}
+            )
+
+        return attrs
+
     def validate_password(self, value):
         validate_password(value)
         return value
@@ -38,6 +48,19 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
         return user
+
+    def update(self, instance, validated_data):
+        password = validated_data.pop("password", None)
+
+        for attribute, value in validated_data.items():
+            setattr(instance, attribute, value)
+
+        if password:
+            instance.set_password(password)
+
+        instance.save()
+
+        return instance
 
 
 class UserAccountSerializer(serializers.Serializer):

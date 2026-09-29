@@ -137,7 +137,7 @@ const CreateAppointment = () => {
   if (doctorsLoading || patientsLoading) {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
-        <div className="flex items-center gap-2 text-gray-600">
+        <div className="flex items-center gap-2 text-slate-600">
           <Loader2 className="h-5 w-5 animate-spin" />
           Loading appointment form...
         </div>
@@ -164,34 +164,43 @@ const CreateAppointment = () => {
         <button
           type="button"
           onClick={() => navigate("/appointments")}
-          className="rounded-lg p-2 text-gray-600 transition hover:bg-gray-100 hover:text-gray-900"
+          className="rounded-lg p-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
           title="Back to appointments"
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
 
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            Create Appointment
-          </h1>
+        <div className="flex items-center gap-3">
+          <div className="rounded-lg bg-blue-50 p-2">
+            <CalendarDays className="h-6 w-6 text-blue-600" />
+          </div>
 
-          <p className="text-sm text-gray-500">
-            Schedule an appointment with a doctor
-          </p>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">
+              Create Appointment
+            </h1>
+
+            <p className="text-sm text-slate-500">
+              {user?.role === "PATIENT"
+                ? "Request an appointment with a doctor"
+                : "Schedule an appointment with a doctor"}
+            </p>
+          </div>
         </div>
       </div>
 
       {/* Form */}
-      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-6">
 
           {/* Patient */}
           <div>
             <label
               htmlFor="patient_id"
-              className="mb-2 block text-sm font-medium text-gray-700"
+              className="mb-2 block text-sm font-medium text-slate-700"
             >
               Patient
+              <span className="ml-1 text-red-500">*</span>
             </label>
 
             {user?.role === "PATIENT" ? (
@@ -205,7 +214,7 @@ const CreateAppointment = () => {
                     : "Patient profile not found"
                 }
                 disabled
-                className="w-full rounded-lg border border-gray-300 bg-gray-100 px-3 py-2.5 text-sm text-gray-600"
+                className="w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-600"
               />
             ) : (
               <select
@@ -213,7 +222,7 @@ const CreateAppointment = () => {
                 name="patient_id"
                 value={formData.patient_id}
                 onChange={handleChange}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               >
                 <option value="">
                   Select a patient
@@ -239,9 +248,10 @@ const CreateAppointment = () => {
           <div>
             <label
               htmlFor="doctor_id"
-              className="mb-2 block text-sm font-medium text-gray-700"
+              className="mb-2 block text-sm font-medium text-slate-700"
             >
               Doctor
+              <span className="ml-1 text-red-500">*</span>
             </label>
 
             <select
@@ -249,7 +259,7 @@ const CreateAppointment = () => {
               name="doctor_id"
               value={formData.doctor_id}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
             >
               <option value="">
                 Select a doctor
@@ -284,10 +294,11 @@ const CreateAppointment = () => {
           <div>
             <label
               htmlFor="appointment_date"
-              className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700"
+              className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-700"
             >
-              <CalendarDays className="h-4 w-4" />
+              <CalendarDays className="h-4 w-4 text-blue-600" />
               Appointment Date & Time
+              <span className="text-red-500">*</span>
             </label>
 
             <input
@@ -297,7 +308,7 @@ const CreateAppointment = () => {
               value={formData.appointment_date}
               onChange={handleChange}
               min={new Date().toISOString().slice(0, 16)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
             />
           </div>
 
@@ -305,7 +316,7 @@ const CreateAppointment = () => {
           <div>
             <label
               htmlFor="reason"
-              className="mb-2 block text-sm font-medium text-gray-700"
+              className="mb-2 block text-sm font-medium text-slate-700"
             >
               Reason
             </label>
@@ -317,7 +328,7 @@ const CreateAppointment = () => {
               onChange={handleChange}
               rows={4}
               placeholder="Enter the reason for the appointment..."
-              className="w-full resize-none rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="w-full resize-none rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
             />
           </div>
 
@@ -333,7 +344,7 @@ const CreateAppointment = () => {
             <button
               type="button"
               onClick={() => navigate("/appointments")}
-              className="rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+              className="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
             >
               Cancel
             </button>

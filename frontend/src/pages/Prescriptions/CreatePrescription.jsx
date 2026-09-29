@@ -289,7 +289,7 @@ const CreatePrescription = () => {
   if (isLoading) {
     return (
       <div className="flex min-h-75 items-center justify-center">
-        <p className="text-gray-500">
+        <p className="text-slate-500">
           Loading prescription form...
         </p>
       </div>
@@ -310,7 +310,7 @@ const CreatePrescription = () => {
         <button
           type="button"
           onClick={() => navigate("/prescriptions")}
-          className="mt-4 rounded-lg bg-gray-800 px-4 py-2 text-sm font-medium text-white hover:bg-gray-900"
+          className="mt-4 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
         >
           Back to Prescriptions
         </button>
@@ -325,17 +325,17 @@ const CreatePrescription = () => {
         <button
           type="button"
           onClick={() => navigate("/prescriptions")}
-          className="rounded-lg border border-gray-300 bg-white p-2 text-gray-600 hover:bg-gray-50"
+          className="rounded-lg border border-slate-300 bg-white p-2 text-slate-600 hover:bg-slate-50"
         >
           <ArrowLeft size={20} />
         </button>
 
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-slate-900">
             New Prescription
           </h1>
 
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-slate-500">
             Create a prescription for a patient.
           </p>
         </div>
@@ -360,19 +360,19 @@ const CreatePrescription = () => {
       {/* Form */}
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
+        className="space-y-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
       >
         {/* Doctor */}
         <div>
           <label
             htmlFor="doctor_id"
-            className="mb-2 block text-sm font-medium text-gray-700"
+            className="mb-2 block text-sm font-medium text-slate-700"
           >
             Doctor
           </label>
 
           {user?.role === "DOCTOR" ? (
-            <div className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700">
+            <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
               {currentDoctorName}
             </div>
           ) : (
@@ -381,7 +381,7 @@ const CreatePrescription = () => {
               name="doctor_id"
               value={formData.doctor_id}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
             >
               <option value="">
                 Select doctor
@@ -405,7 +405,7 @@ const CreatePrescription = () => {
         <div>
           <label
             htmlFor="patient_id"
-            className="mb-2 block text-sm font-medium text-gray-700"
+            className="mb-2 block text-sm font-medium text-slate-700"
           >
             Patient
           </label>
@@ -415,7 +415,7 @@ const CreatePrescription = () => {
             name="patient_id"
             value={formData.patient_id}
             onChange={handleChange}
-            className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
           >
             <option value="">
               Select patient
@@ -433,7 +433,7 @@ const CreatePrescription = () => {
 
           {user?.role === "DOCTOR" &&
             availablePatients.length === 0 && (
-              <p className="mt-2 text-sm text-gray-500">
+              <p className="mt-2 text-sm text-slate-500">
                 No patients with eligible appointments were found
                 for this doctor.
               </p>
@@ -444,7 +444,7 @@ const CreatePrescription = () => {
         <div>
           <label
             htmlFor="medical_record_id"
-            className="mb-2 block text-sm font-medium text-gray-700"
+            className="mb-2 block text-sm font-medium text-slate-700"
           >
             Medical Record
           </label>
@@ -455,7 +455,7 @@ const CreatePrescription = () => {
             value={formData.medical_record_id}
             onChange={handleChange}
             disabled={!formData.patient_id}
-            className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none disabled:cursor-not-allowed disabled:bg-gray-100 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none disabled:cursor-not-allowed disabled:bg-slate-100 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
           >
             <option value="">
               {formData.patient_id
@@ -476,7 +476,7 @@ const CreatePrescription = () => {
 
           {formData.patient_id &&
             availableMedicalRecords.length === 0 && (
-              <p className="mt-2 text-sm text-gray-500">
+              <p className="mt-2 text-sm text-slate-500">
                 No medical records found for this patient.
               </p>
             )}
@@ -486,7 +486,7 @@ const CreatePrescription = () => {
         <div>
           <label
             htmlFor="status"
-            className="mb-2 block text-sm font-medium text-gray-700"
+            className="mb-2 block text-sm font-medium text-slate-700"
           >
             Status
           </label>
@@ -496,7 +496,7 @@ const CreatePrescription = () => {
             name="status"
             value={formData.status}
             onChange={handleChange}
-            className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
           >
             <option value="ACTIVE">
               Active
@@ -516,7 +516,7 @@ const CreatePrescription = () => {
         <div>
           <label
             htmlFor="instructions"
-            className="mb-2 block text-sm font-medium text-gray-700"
+            className="mb-2 block text-sm font-medium text-slate-700"
           >
             Instructions
           </label>
@@ -528,16 +528,16 @@ const CreatePrescription = () => {
             onChange={handleChange}
             rows={5}
             placeholder="Enter prescription instructions..."
-            className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
           />
         </div>
 
         {/* Submit */}
-        <div className="flex justify-end gap-3 border-t border-gray-200 pt-5">
+        <div className="flex justify-end gap-3 border-t border-slate-200 pt-5">
           <button
             type="button"
             onClick={() => navigate("/prescriptions")}
-            className="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
           >
             Cancel
           </button>

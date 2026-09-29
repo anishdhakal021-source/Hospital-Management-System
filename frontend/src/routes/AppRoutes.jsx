@@ -37,6 +37,8 @@ import CreateMedicineBatch from "../pages/Medicine/CreateMedicineBatch";
 import EditMedicineBatch from "../pages/Medicine/EditMedicineBatch";
 import Users from "../pages/Users/Users";
 import UserRegistration from "../pages/Users/UserRegistration";
+import UserDetails from "../pages/Users/UserDetails";
+import EditUser from "../pages/Users/EditUser";
 
 const SectionEntry = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -82,6 +84,8 @@ const AppRoutes = () => {
           
           <Route path="/users" element={<Users />} />
           <Route path="/users/new" element={<UserRegistration />} />
+          <Route path="/users/:id" element={<UserDetails />} />
+          <Route path="/users/:id/edit" element={<EditUser />} />
 
 
           <Route path="/patients" element={<Patients />} />

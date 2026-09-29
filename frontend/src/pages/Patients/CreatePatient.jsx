@@ -4,6 +4,7 @@ import {
   ArrowLeft,
   Save,
   RefreshCw,
+  UserPlus,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -86,24 +87,32 @@ const CreatePatient = () => {
       <div>
         <Link
           to="/patients"
-          className="inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900"
+          className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900"
         >
           <ArrowLeft size={16} />
           Back to Patients
         </Link>
 
-        <h1 className="mt-4 text-2xl font-bold text-gray-800">
-          Register Patient
-        </h1>
+        <div className="mt-4 flex items-center gap-3">
+          <div className="rounded-lg bg-blue-50 p-2">
+            <UserPlus className="h-6 w-6 text-blue-600" />
+          </div>
 
-        <p className="mt-1 text-sm text-gray-500">
-          Create a patient account and profile.
-        </p>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">
+              Register Patient
+            </h1>
+
+            <p className="text-sm text-slate-500">
+              Create a patient account and profile.
+            </p>
+          </div>
+        </div>
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-8 rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
+        className="space-y-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
       >
         {formError && (
           <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
@@ -113,7 +122,7 @@ const CreatePatient = () => {
 
         {/* Account Information */}
         <section>
-          <h2 className="text-lg font-semibold text-gray-800">
+          <h2 className="text-lg font-semibold text-slate-800">
             Account Information
           </h2>
 
@@ -161,7 +170,7 @@ const CreatePatient = () => {
 
         {/* Personal Information */}
         <section className="border-t pt-6">
-          <h2 className="text-lg font-semibold text-gray-800">
+          <h2 className="text-lg font-semibold text-slate-800">
             Personal Information
           </h2>
 
@@ -175,7 +184,7 @@ const CreatePatient = () => {
             />
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700">
+              <label className="mb-2 block text-sm font-medium text-slate-700">
                 Gender
               </label>
 
@@ -183,7 +192,7 @@ const CreatePatient = () => {
                 name="gender"
                 value={formData.gender}
                 onChange={handleChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+                className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
               >
                 <option value="">Select gender</option>
                 <option value="Male">Male</option>
@@ -193,7 +202,7 @@ const CreatePatient = () => {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700">
+              <label className="mb-2 block text-sm font-medium text-slate-700">
                 Blood Group
               </label>
 
@@ -201,7 +210,7 @@ const CreatePatient = () => {
                 name="blood_group"
                 value={formData.blood_group}
                 onChange={handleChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+                className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
               >
                 <option value="">Select blood group</option>
                 <option value="A+">A+</option>
@@ -235,14 +244,14 @@ const CreatePatient = () => {
 
         {/* Address */}
         <section className="border-t pt-6">
-          <h2 className="text-lg font-semibold text-gray-800">
+          <h2 className="text-lg font-semibold text-slate-800">
             Contact Information
           </h2>
 
           <div className="mt-4">
             <label
               htmlFor="address"
-              className="mb-2 block text-sm font-medium text-gray-700"
+              className="mb-2 block text-sm font-medium text-slate-700"
             >
               Address
             </label>
@@ -254,7 +263,7 @@ const CreatePatient = () => {
               onChange={handleChange}
               rows={3}
               placeholder="Patient address"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+              className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
             />
           </div>
         </section>
@@ -263,7 +272,7 @@ const CreatePatient = () => {
         <div className="flex flex-col-reverse gap-3 border-t pt-6 sm:flex-row sm:justify-end">
           <Link
             to="/patients"
-            className="inline-flex items-center justify-center rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="inline-flex items-center justify-center rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
           >
             Cancel
           </Link>
@@ -271,7 +280,7 @@ const CreatePatient = () => {
           <button
             type="submit"
             disabled={mutation.isPending}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {mutation.isPending ? (
               <>
@@ -306,7 +315,7 @@ const FormField = ({
     <div>
       <label
         htmlFor={name}
-        className="mb-2 block text-sm font-medium text-gray-700"
+        className="mb-2 block text-sm font-medium text-slate-700"
       >
         {label}
         {required && (
@@ -321,7 +330,7 @@ const FormField = ({
         value={value}
         onChange={onChange}
         required={required}
-        className="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+        className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
       />
     </div>
   );

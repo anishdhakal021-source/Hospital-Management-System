@@ -87,7 +87,7 @@ function EditPrescriptionItem() {
   if (isLoading) {
     return (
       <div className="p-6">
-        <p className="text-gray-600">Loading medicine...</p>
+        <p className="text-slate-600">Loading medicine...</p>
       </div>
     );
   }
@@ -112,27 +112,27 @@ function EditPrescriptionItem() {
         <button
           type="button"
           onClick={() => navigate(`/prescriptions/${id}`)}
-          className="rounded-lg border border-gray-300 p-2 hover:bg-gray-50"
+          className="rounded-lg border border-slate-300 p-2 hover:bg-slate-50"
         >
           <ArrowLeft size={20} />
         </button>
 
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">
+          <h1 className="text-2xl font-bold text-slate-800">
             Edit Medicine
           </h1>
 
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-slate-500">
             Update the prescription medicine details.
           </p>
         </div>
       </div>
 
-      <div className="max-w-2xl rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-        <div className="mb-5 rounded-lg bg-gray-50 p-4">
-          <p className="text-sm text-gray-500">Medicine</p>
+      <div className="max-w-2xl rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="mb-5 rounded-lg bg-slate-50 p-4">
+          <p className="text-sm text-slate-500">Medicine</p>
 
-          <p className="font-semibold text-gray-800">
+          <p className="font-semibold text-slate-800">
             {item.medicine_name || `Medicine #${item.medicine}`}
           </p>
         </div>
@@ -141,7 +141,7 @@ function EditPrescriptionItem() {
           <div>
             <label
               htmlFor="quantity"
-              className="mb-1 block text-sm font-medium text-gray-700"
+              className="mb-1 block text-sm font-medium text-slate-700"
             >
               Quantity
             </label>
@@ -154,14 +154,14 @@ function EditPrescriptionItem() {
               value={formData.quantity}
               onChange={handleChange}
               required
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-emerald-500"
             />
           </div>
 
           <div>
             <label
               htmlFor="dosage"
-              className="mb-1 block text-sm font-medium text-gray-700"
+              className="mb-1 block text-sm font-medium text-slate-700"
             >
               Dosage
             </label>
@@ -173,14 +173,14 @@ function EditPrescriptionItem() {
               value={formData.dosage}
               onChange={handleChange}
               required
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-emerald-500"
             />
           </div>
 
           <div>
             <label
               htmlFor="frequency"
-              className="mb-1 block text-sm font-medium text-gray-700"
+              className="mb-1 block text-sm font-medium text-slate-700"
             >
               Frequency
             </label>
@@ -192,14 +192,14 @@ function EditPrescriptionItem() {
               value={formData.frequency}
               onChange={handleChange}
               required
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-emerald-500"
             />
           </div>
 
           <div>
             <label
               htmlFor="duration"
-              className="mb-1 block text-sm font-medium text-gray-700"
+              className="mb-1 block text-sm font-medium text-slate-700"
             >
               Duration
             </label>
@@ -211,14 +211,14 @@ function EditPrescriptionItem() {
               value={formData.duration}
               onChange={handleChange}
               required
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-emerald-500"
             />
           </div>
 
           <div>
             <label
               htmlFor="instructions"
-              className="mb-1 block text-sm font-medium text-gray-700"
+              className="mb-1 block text-sm font-medium text-slate-700"
             >
               Instructions
             </label>
@@ -229,7 +229,7 @@ function EditPrescriptionItem() {
               rows="3"
               value={formData.instructions}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-emerald-500"
             />
           </div>
 

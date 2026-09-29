@@ -25,7 +25,7 @@ const Prescriptions = () => {
   if (isLoading) {
     return (
       <div className="flex min-h-75 items-center justify-center">
-        <p className="text-gray-500">Loading prescriptions...</p>
+        <p className="text-slate-500">Loading prescriptions...</p>
       </div>
     );
   }
@@ -61,13 +61,20 @@ const Prescriptions = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            Prescriptions
-          </h1>
-          <p className="mt-1 text-sm text-gray-500">
-            Manage patient prescriptions.
-          </p>
+        <div className="flex items-center gap-3">
+          <div className="rounded-lg bg-emerald-50 p-2">
+            <FileText className="h-6 w-6 text-emerald-600" />
+          </div>
+
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">
+              Prescriptions
+            </h1>
+
+            <p className="text-sm text-slate-500">
+              Manage patient prescriptions.
+            </p>
+          </div>
         </div>
 
         <div className="flex items-center gap-3">
@@ -75,7 +82,7 @@ const Prescriptions = () => {
             type="button"
             onClick={() => refetch()}
             disabled={isFetching}
-            className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-60"
+            className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-60"
           >
             <RefreshCw
               size={16}
@@ -99,74 +106,74 @@ const Prescriptions = () => {
 
       {/* Empty State */}
       {prescriptionList.length === 0 ? (
-        <div className="rounded-xl border border-gray-200 bg-white p-10 text-center">
+        <div className="rounded-xl border border-slate-200 bg-white p-10 text-center">
           <FileText
             size={40}
-            className="mx-auto text-gray-400"
+            className="mx-auto text-slate-400"
           />
 
-          <h2 className="mt-4 text-lg font-semibold text-gray-900">
+          <h2 className="mt-4 text-lg font-semibold text-slate-900">
             No prescriptions found
           </h2>
 
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="mt-2 text-sm text-slate-500">
             There are no prescriptions available yet.
           </p>
         </div>
       ) : (
         /* Prescription Table */
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-slate-200">
+              <thead className="bg-slate-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
                     ID
                   </th>
 
-                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Patient
                   </th>
 
-                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Doctor
                   </th>
 
-                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Date
                   </th>
 
-                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Status
                   </th>
 
-                  <th className="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  <th className="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Action
                   </th>
                 </tr>
               </thead>
 
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-slate-200">
                 {prescriptionList.map((prescription) => (
                   <tr
                     key={prescription.id}
-                    className="hover:bg-gray-50"
+                    className="hover:bg-slate-50"
                   >
-                    <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">
+                    <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-slate-900">
                       #{prescription.id}
                     </td>
 
-                    <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-700">
+                    <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-700">
                       {prescription.patient_name ||
                         `Patient #${prescription.patient_id}`}
                     </td>
 
-                    <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-700">
+                    <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-700">
                       {prescription.doctor_name ||
                         `Doctor #${prescription.doctor_id}`}
                     </td>
 
-                    <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-700">
+                    <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-700">
                       {prescription.prescribed_date || "-"}
                     </td>
 
@@ -184,7 +191,7 @@ const Prescriptions = () => {
                             `/prescriptions/${prescription.id}`
                           )
                         }
-                        className="text-sm font-medium text-blue-600 hover:text-blue-800"
+                        className="text-sm font-medium text-emerald-600 hover:text-emerald-800"
                       >
                         View
                       </button>

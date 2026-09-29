@@ -119,7 +119,7 @@ const PatientDetails = () => {
             size={28}
             className="mx-auto animate-spin text-slate-600"
           />
-          <p className="mt-3 text-gray-600">
+          <p className="mt-3 text-slate-600">
             Loading patient...
           </p>
         </div>
@@ -142,7 +142,7 @@ const PatientDetails = () => {
         <div className="mt-4 flex gap-3">
           <button
             onClick={() => refetch()}
-            className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white"
+            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white"
           >
             <RefreshCw size={16} />
             Try Again
@@ -150,7 +150,7 @@ const PatientDetails = () => {
 
           <Link
             to="/patients"
-            className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700"
+            className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700"
           >
             <ArrowLeft size={16} />
             Back
@@ -173,7 +173,7 @@ const PatientDetails = () => {
         <div>
           <Link
             to="/patients"
-            className="inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900"
+            className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900"
           >
             <ArrowLeft size={16} />
             Back to Patients
@@ -185,11 +185,11 @@ const PatientDetails = () => {
             </div>
 
             <div>
-              <h1 className="text-2xl font-bold text-gray-800">
+              <h1 className="text-2xl font-bold text-slate-800">
                 {patientName}
               </h1>
 
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-slate-500">
                 @{patient.username}
               </p>
             </div>
@@ -199,7 +199,7 @@ const PatientDetails = () => {
         {!editing && (
           <button
             onClick={startEditing}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-800"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700"
           >
             <Edit size={17} />
             Edit Patient
@@ -214,9 +214,9 @@ const PatientDetails = () => {
       )}
 
       {!editing ? (
-        <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div className="rounded-xl border border-slate-200 bg-white shadow-sm">
           <div className="border-b px-6 py-4">
-            <h2 className="font-semibold text-gray-800">
+            <h2 className="font-semibold text-slate-800">
               Patient Information
             </h2>
           </div>
@@ -266,7 +266,7 @@ const PatientDetails = () => {
       ) : (
         <form
           onSubmit={handleSubmit}
-          className="space-y-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
+          className="space-y-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
         >
           <div className="grid gap-5 sm:grid-cols-2">
             <FormField
@@ -278,7 +278,7 @@ const PatientDetails = () => {
             />
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700">
+              <label className="mb-2 block text-sm font-medium text-slate-700">
                 Gender
               </label>
 
@@ -286,7 +286,7 @@ const PatientDetails = () => {
                 name="gender"
                 value={formData.gender}
                 onChange={handleChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+                className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
               >
                 <option value="">Select gender</option>
                 <option value="Male">Male</option>
@@ -296,7 +296,7 @@ const PatientDetails = () => {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700">
+              <label className="mb-2 block text-sm font-medium text-slate-700">
                 Blood Group
               </label>
 
@@ -304,7 +304,7 @@ const PatientDetails = () => {
                 name="blood_group"
                 value={formData.blood_group}
                 onChange={handleChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+                className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
               >
                 <option value="">Select blood group</option>
                 <option value="A+">A+</option>
@@ -336,7 +336,7 @@ const PatientDetails = () => {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">
+            <label className="mb-2 block text-sm font-medium text-slate-700">
               Address
             </label>
 
@@ -345,7 +345,7 @@ const PatientDetails = () => {
               value={formData.address}
               onChange={handleChange}
               rows={3}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+              className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
             />
           </div>
 
@@ -353,7 +353,7 @@ const PatientDetails = () => {
             <button
               type="button"
               onClick={cancelEditing}
-              className="rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              className="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
             >
               Cancel
             </button>
@@ -361,7 +361,7 @@ const PatientDetails = () => {
             <button
               type="submit"
               disabled={mutation.isPending}
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {mutation.isPending ? (
                 <>
@@ -388,10 +388,10 @@ const PatientDetails = () => {
 const InfoItem = ({ label, value }) => {
   return (
     <div>
-      <p className="text-sm font-medium text-gray-500">
+      <p className="text-sm font-medium text-slate-500">
         {label}
       </p>
-      <p className="mt-1 text-gray-800">
+      <p className="mt-1 text-slate-800">
         {value || "—"}
       </p>
     </div>
@@ -409,7 +409,7 @@ const FormField = ({
     <div>
       <label
         htmlFor={name}
-        className="mb-2 block text-sm font-medium text-gray-700"
+        className="mb-2 block text-sm font-medium text-slate-700"
       >
         {label}
       </label>
@@ -420,7 +420,7 @@ const FormField = ({
         type={type}
         value={value}
         onChange={onChange}
-        className="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+        className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
       />
     </div>
   );

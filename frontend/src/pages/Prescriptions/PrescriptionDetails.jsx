@@ -66,7 +66,7 @@ const PrescriptionDetails = () => {
   if (isLoading) {
     return (
       <div className="flex min-h-75 items-center justify-center">
-        <p className="text-gray-500">Loading prescription...</p>
+        <p className="text-slate-500">Loading prescription...</p>
       </div>
     );
   }
@@ -100,8 +100,8 @@ const PrescriptionDetails = () => {
 
   if (!prescription) {
     return (
-      <div className="rounded-lg border border-gray-200 bg-white p-6">
-        <p className="text-gray-500">Prescription not found.</p>
+      <div className="rounded-lg border border-slate-200 bg-white p-6">
+        <p className="text-slate-500">Prescription not found.</p>
       </div>
     );
   }
@@ -113,18 +113,18 @@ const PrescriptionDetails = () => {
         <button
           type="button"
           onClick={() => navigate("/prescriptions")}
-          className="rounded-lg border border-gray-300 bg-white p-2 text-gray-600 hover:bg-gray-50"
+          className="rounded-lg border border-slate-300 bg-white p-2 text-slate-600 hover:bg-slate-50"
           aria-label="Back to prescriptions"
         >
           <ArrowLeft size={20} />
         </button>
 
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-slate-900">
             Prescription
           </h1>
 
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-slate-500">
             Prescription #{prescription.id}
           </p>
         </div>
@@ -177,48 +177,48 @@ const PrescriptionDetails = () => {
       </div>
 
       {/* Basic Information */}
-      <div className="rounded-xl border border-gray-200 bg-white p-6">
-        <h2 className="text-lg font-semibold text-gray-900">
+      <div className="rounded-xl border border-slate-200 bg-white p-6">
+        <h2 className="text-lg font-semibold text-slate-900">
           Prescription Information
         </h2>
 
         <div className="mt-6 grid gap-6 sm:grid-cols-2">
           <div>
-            <p className="text-sm text-gray-500">Patient</p>
-            <p className="mt-1 font-medium text-gray-900">
+            <p className="text-sm text-slate-500">Patient</p>
+            <p className="mt-1 font-medium text-slate-900">
               {prescription.patient_name ||
                 `Patient #${prescription.patient_id}`}
             </p>
           </div>
 
           <div>
-            <p className="text-sm text-gray-500">Doctor</p>
-            <p className="mt-1 font-medium text-gray-900">
+            <p className="text-sm text-slate-500">Doctor</p>
+            <p className="mt-1 font-medium text-slate-900">
               {prescription.doctor_name ||
                 `Doctor #${prescription.doctor_id}`}
             </p>
           </div>
 
           <div>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-slate-500">
               Medical Record
             </p>
-            <p className="mt-1 font-medium text-gray-900">
+            <p className="mt-1 font-medium text-slate-900">
               #{prescription.medical_record_id}
             </p>
           </div>
 
           <div>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-slate-500">
               Prescribed Date
             </p>
-            <p className="mt-1 font-medium text-gray-900">
+            <p className="mt-1 font-medium text-slate-900">
               {prescription.prescribed_date || "-"}
             </p>
           </div>
 
           <div>
-            <p className="text-sm text-gray-500">Status</p>
+            <p className="text-sm text-slate-500">Status</p>
             <span className="mt-1 inline-block rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
               {prescription.status}
             </span>
@@ -227,24 +227,24 @@ const PrescriptionDetails = () => {
       </div>
 
       {/* Instructions */}
-      <div className="rounded-xl border border-gray-200 bg-white p-6">
-        <h2 className="text-lg font-semibold text-gray-900">
+      <div className="rounded-xl border border-slate-200 bg-white p-6">
+        <h2 className="text-lg font-semibold text-slate-900">
           Instructions
         </h2>
 
-        <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-gray-600">
+        <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-slate-600">
           {prescription.instructions || "No instructions provided."}
         </p>
       </div>
 
       {/* Medicine Items */}
-      <div className="rounded-xl border border-gray-200 bg-white p-6">
-        <h2 className="text-lg font-semibold text-gray-900">
+      <div className="rounded-xl border border-slate-200 bg-white p-6">
+        <h2 className="text-lg font-semibold text-slate-900">
           Medicines
         </h2>
 
         {isItemsLoading ? (
-          <p className="mt-4 text-sm text-gray-500">
+          <p className="mt-4 text-sm text-slate-500">
             Loading medicines...
           </p>
         ) : isItemsError ? (
@@ -252,60 +252,60 @@ const PrescriptionDetails = () => {
             Failed to load prescription medicines.
           </p>
         ) : items.length === 0 ? (
-          <p className="mt-4 text-sm text-gray-500">
+          <p className="mt-4 text-sm text-slate-500">
             No medicines added to this prescription.
           </p>
         ) : (
           <div className="mt-4 overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-slate-200">
+              <thead className="bg-slate-50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500">
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-slate-500">
                     Medicine
                   </th>
 
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500">
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-slate-500">
                     Quantity
                   </th>
 
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500">
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-slate-500">
                     Dosage
                   </th>
 
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500">
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-slate-500">
                     Frequency
                   </th>
 
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500">
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-slate-500">
                     Duration
                   </th>
                 </tr>
               </thead>
 
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-slate-200">
                 {items.map((item) => (
                   <tr key={item.id}>
-                    <td className="px-4 py-3 text-sm text-gray-900">
+                    <td className="px-4 py-3 text-sm text-slate-900">
                       {item.medicine_name || `Medicine #${item.medicine}`}
                     </td>
 
-                    <td className="px-4 py-3 text-sm text-gray-700">
+                    <td className="px-4 py-3 text-sm text-slate-700">
                       {item.quantity}
                     </td>
 
-                    <td className="px-4 py-3 text-sm text-gray-700">
+                    <td className="px-4 py-3 text-sm text-slate-700">
                       {item.dosage}
                     </td>
 
-                    <td className="px-4 py-3 text-sm text-gray-700">
+                    <td className="px-4 py-3 text-sm text-slate-700">
                       {item.frequency}
                     </td>
 
-                    <td className="px-4 py-3 text-sm text-gray-700">
+                    <td className="px-4 py-3 text-sm text-slate-700">
                       {item.duration}
                     </td>
                     
-                    <td className="px-4 py-3 text-sm text-gray-700">
+                    <td className="px-4 py-3 text-sm text-slate-700">
                       {canManagePrescription && (
                         <div className="flex items-center gap-2">
                           <button

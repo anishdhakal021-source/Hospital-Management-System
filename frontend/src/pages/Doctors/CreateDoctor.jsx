@@ -130,20 +130,26 @@ const CreateDoctor = () => {
         <button
           type="button"
           onClick={() => navigate("/doctors")}
-          className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+          className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900"
           aria-label="Back to doctors"
         >
           <ArrowLeft size={20} />
         </button>
 
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            Register Doctor
-          </h1>
+        <div className="flex items-center gap-3">
+          <div className="rounded-lg bg-blue-50 p-2">
+            <UserPlus className="h-6 w-6 text-blue-600" />
+          </div>
 
-          <p className="mt-1 text-sm text-gray-600">
-            Create a doctor account and profile.
-          </p>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">
+              Register Doctor
+            </h1>
+
+            <p className="text-sm text-slate-500">
+              Create a doctor account and profile.
+            </p>
+          </div>
         </div>
       </div>
 
@@ -161,12 +167,12 @@ const CreateDoctor = () => {
 
       <form
         onSubmit={handleSubmit}
-        className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
+        className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
       >
-        <div className="mb-6 flex items-center gap-2 border-b border-gray-200 pb-4">
+        <div className="mb-6 flex items-center gap-2 border-b border-slate-200 pb-4">
           <UserPlus size={20} className="text-blue-600" />
 
-          <h2 className="font-semibold text-gray-900">
+          <h2 className="font-semibold text-slate-900">
             Account Information
           </h2>
         </div>
@@ -175,7 +181,7 @@ const CreateDoctor = () => {
           <div>
             <label
               htmlFor="username"
-              className="mb-1 block text-sm font-medium text-gray-700"
+              className="mb-1 block text-sm font-medium text-slate-700"
             >
               Username *
             </label>
@@ -186,7 +192,7 @@ const CreateDoctor = () => {
               type="text"
               value={formData.username}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               required
             />
           </div>
@@ -194,7 +200,7 @@ const CreateDoctor = () => {
           <div>
             <label
               htmlFor="password"
-              className="mb-1 block text-sm font-medium text-gray-700"
+              className="mb-1 block text-sm font-medium text-slate-700"
             >
               Password *
             </label>
@@ -205,7 +211,7 @@ const CreateDoctor = () => {
               type="password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               required
             />
           </div>
@@ -213,7 +219,7 @@ const CreateDoctor = () => {
           <div>
             <label
               htmlFor="first_name"
-              className="mb-1 block text-sm font-medium text-gray-700"
+              className="mb-1 block text-sm font-medium text-slate-700"
             >
               First Name
             </label>
@@ -224,14 +230,14 @@ const CreateDoctor = () => {
               type="text"
               value={formData.first_name}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
             />
           </div>
 
           <div>
             <label
               htmlFor="last_name"
-              className="mb-1 block text-sm font-medium text-gray-700"
+              className="mb-1 block text-sm font-medium text-slate-700"
             >
               Last Name
             </label>
@@ -242,14 +248,14 @@ const CreateDoctor = () => {
               type="text"
               value={formData.last_name}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
             />
           </div>
 
           <div className="md:col-span-2">
             <label
               htmlFor="email"
-              className="mb-1 block text-sm font-medium text-gray-700"
+              className="mb-1 block text-sm font-medium text-slate-700"
             >
               Email
             </label>
@@ -260,13 +266,13 @@ const CreateDoctor = () => {
               type="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
             />
           </div>
         </div>
 
-        <div className="mb-6 mt-8 border-b border-gray-200 pb-4">
-          <h2 className="font-semibold text-gray-900">
+        <div className="mb-6 mt-8 border-b border-slate-200 pb-4">
+          <h2 className="font-semibold text-slate-900">
             Professional Information
           </h2>
         </div>
@@ -275,7 +281,7 @@ const CreateDoctor = () => {
           <div>
             <label
               htmlFor="department_id"
-              className="mb-1 block text-sm font-medium text-gray-700"
+              className="mb-1 block text-sm font-medium text-slate-700"
             >
               Department *
             </label>
@@ -286,7 +292,7 @@ const CreateDoctor = () => {
               value={formData.department_id}
               onChange={handleChange}
               disabled={departmentsLoading}
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 disabled:bg-gray-100"
+              className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-100"
               required
             >
               <option value="">
@@ -309,7 +315,7 @@ const CreateDoctor = () => {
           <div>
             <label
               htmlFor="specialization"
-              className="mb-1 block text-sm font-medium text-gray-700"
+              className="mb-1 block text-sm font-medium text-slate-700"
             >
               Specialization *
             </label>
@@ -321,7 +327,7 @@ const CreateDoctor = () => {
               value={formData.specialization}
               onChange={handleChange}
               placeholder="e.g. Cardiologist"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               required
             />
           </div>
@@ -329,7 +335,7 @@ const CreateDoctor = () => {
           <div>
             <label
               htmlFor="license_number"
-              className="mb-1 block text-sm font-medium text-gray-700"
+              className="mb-1 block text-sm font-medium text-slate-700"
             >
               License Number *
             </label>
@@ -340,7 +346,7 @@ const CreateDoctor = () => {
               type="text"
               value={formData.license_number}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               required
             />
           </div>
@@ -348,7 +354,7 @@ const CreateDoctor = () => {
           <div>
             <label
               htmlFor="phone"
-              className="mb-1 block text-sm font-medium text-gray-700"
+              className="mb-1 block text-sm font-medium text-slate-700"
             >
               Phone *
             </label>
@@ -359,7 +365,7 @@ const CreateDoctor = () => {
               type="tel"
               value={formData.phone}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               required
             />
           </div>
@@ -367,7 +373,7 @@ const CreateDoctor = () => {
           <div>
             <label
               htmlFor="consultation_fee"
-              className="mb-1 block text-sm font-medium text-gray-700"
+              className="mb-1 block text-sm font-medium text-slate-700"
             >
               Consultation Fee *
             </label>
@@ -380,7 +386,7 @@ const CreateDoctor = () => {
               step="0.01"
               value={formData.consultation_fee}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               required
             />
           </div>
@@ -392,23 +398,23 @@ const CreateDoctor = () => {
               type="checkbox"
               checked={formData.is_available}
               onChange={handleChange}
-              className="h-4 w-4 rounded border-gray-300"
+              className="h-4 w-4 rounded border-slate-300"
             />
 
             <label
               htmlFor="is_available"
-              className="text-sm font-medium text-gray-700"
+              className="text-sm font-medium text-slate-700"
             >
               Doctor is currently available
             </label>
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col-reverse gap-3 border-t border-gray-200 pt-6 sm:flex-row sm:justify-end">
+        <div className="mt-8 flex flex-col-reverse gap-3 border-t border-slate-200 pt-6 sm:flex-row sm:justify-end">
           <button
             type="button"
             onClick={() => navigate("/doctors")}
-            className="rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
           >
             Cancel
           </button>

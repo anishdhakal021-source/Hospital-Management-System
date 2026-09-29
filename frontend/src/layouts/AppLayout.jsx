@@ -81,7 +81,7 @@ const AppLayout = ({ children }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-slate-50">
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
@@ -172,18 +172,18 @@ const AppLayout = ({ children }) => {
             {/* Mobile menu button */}
             <button
               onClick={() => setSidebarOpen(true)}
-              className="rounded-lg p-2 text-gray-700 hover:bg-gray-100 md:hidden"
+              className="rounded-lg p-2 text-slate-700 hover:bg-slate-100 md:hidden"
               aria-label="Open sidebar"
             >
               <Menu size={24} />
             </button>
 
             <div>
-              <h2 className="text-base font-semibold text-gray-800 sm:text-lg">
+              <h2 className="text-base font-semibold text-slate-800 sm:text-lg">
                 Hospital Management System
               </h2>
 
-              <p className="hidden text-sm text-gray-500 sm:block">
+              <p className="hidden text-sm text-slate-500 sm:block">
                 Manage hospital operations
               </p>
             </div>
@@ -191,11 +191,11 @@ const AppLayout = ({ children }) => {
 
           {/* User information */}
           <div className="text-right">
-            <p className="text-sm font-medium text-gray-800 sm:text-base">
+            <p className="text-sm font-medium text-slate-800 sm:text-base">
               {user?.username}
             </p>
 
-            <p className="text-xs text-gray-500 sm:text-sm">
+            <p className="text-xs text-slate-500 sm:text-sm">
               {user?.role}
             </p>
           </div>

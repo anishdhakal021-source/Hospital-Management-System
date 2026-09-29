@@ -199,18 +199,18 @@ const CreateMedicalRecord = () => {
         <button
           type="button"
           onClick={() => navigate("/medical-records")}
-          className="rounded-lg border border-gray-300 bg-white p-2 text-gray-600 hover:bg-gray-50"
+          className="rounded-lg border border-slate-300 bg-white p-2 text-slate-600 hover:bg-slate-50"
           aria-label="Back to medical records"
         >
           <ArrowLeft size={20} />
         </button>
 
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-slate-900">
             Create Medical Record
           </h1>
 
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-slate-500">
             Add a new medical record for a patient.
           </p>
         </div>
@@ -234,13 +234,13 @@ const CreateMedicalRecord = () => {
       {/* Form */}
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 rounded-xl border border-gray-200 bg-white p-6"
+        className="space-y-6 rounded-xl border border-slate-200 bg-white p-6"
       >
         {/* Patient */}
         <div>
           <label
             htmlFor="patient_id"
-            className="mb-2 block text-sm font-medium text-gray-700"
+            className="mb-2 block text-sm font-medium text-slate-700"
           >
             Patient
           </label>
@@ -251,7 +251,7 @@ const CreateMedicalRecord = () => {
             value={formData.patient_id}
             onChange={handleChange}
             disabled={isLoadingPatients || createMutation.isPending}
-            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500 disabled:bg-gray-100"
+            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-slate-500 focus:ring-1 focus:ring-emerald-500 disabled:bg-slate-100"
           >
             <option value="">
               {isLoadingPatients
@@ -273,7 +273,7 @@ const CreateMedicalRecord = () => {
           {user?.role === "DOCTOR" &&
             !isLoadingPatients &&
             availablePatients.length === 0 && (
-              <p className="mt-2 text-sm text-gray-500">
+              <p className="mt-2 text-sm text-slate-500">
                 No patients with scheduled or completed appointments were
                 found for you.
               </p>
@@ -284,7 +284,7 @@ const CreateMedicalRecord = () => {
         <div>
           <label
             htmlFor="diagnosis"
-            className="mb-2 block text-sm font-medium text-gray-700"
+            className="mb-2 block text-sm font-medium text-slate-700"
           >
             Diagnosis
           </label>
@@ -297,7 +297,7 @@ const CreateMedicalRecord = () => {
             onChange={handleChange}
             disabled={createMutation.isPending}
             placeholder="Enter diagnosis"
-            className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-900 outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500 disabled:bg-gray-100"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-slate-500 focus:ring-1 focus:ring-emerald-500 disabled:bg-slate-100"
           />
         </div>
 
@@ -305,7 +305,7 @@ const CreateMedicalRecord = () => {
         <div>
           <label
             htmlFor="symptoms"
-            className="mb-2 block text-sm font-medium text-gray-700"
+            className="mb-2 block text-sm font-medium text-slate-700"
           >
             Symptoms
           </label>
@@ -318,7 +318,7 @@ const CreateMedicalRecord = () => {
             disabled={createMutation.isPending}
             rows={4}
             placeholder="Describe the patient's symptoms"
-            className="w-full resize-none rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-900 outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500 disabled:bg-gray-100"
+            className="w-full resize-none rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-slate-500 focus:ring-1 focus:ring-emerald-500 disabled:bg-slate-100"
           />
         </div>
 
@@ -326,7 +326,7 @@ const CreateMedicalRecord = () => {
         <div>
           <label
             htmlFor="notes"
-            className="mb-2 block text-sm font-medium text-gray-700"
+            className="mb-2 block text-sm font-medium text-slate-700"
           >
             Notes
           </label>
@@ -339,17 +339,17 @@ const CreateMedicalRecord = () => {
             disabled={createMutation.isPending}
             rows={4}
             placeholder="Additional medical notes"
-            className="w-full resize-none rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-900 outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500 disabled:bg-gray-100"
+            className="w-full resize-none rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-slate-500 focus:ring-1 focus:ring-emerald-500 disabled:bg-slate-100"
           />
         </div>
 
         {/* Buttons */}
-        <div className="flex flex-col-reverse gap-3 border-t border-gray-200 pt-5 sm:flex-row sm:justify-end">
+        <div className="flex flex-col-reverse gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:justify-end">
           <button
             type="button"
             onClick={() => navigate("/medical-records")}
             disabled={createMutation.isPending}
-            className="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
           >
             Cancel
           </button>
@@ -360,7 +360,7 @@ const CreateMedicalRecord = () => {
               createMutation.isPending ||
               (user?.role === "DOCTOR" && availablePatients.length === 0)
             }
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
             <Save size={17} />
 
